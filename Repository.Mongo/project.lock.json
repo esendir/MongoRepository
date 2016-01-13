@@ -153,6 +153,7 @@
       "MongoDB.Driver >= 2.2.1"
     ],
     ".NETFramework,Version=v4.6": [
+      "fx/System.Configuration >= 4.0.0",
       "fx/System.Runtime.Serialization >= 4.0.0"
     ]
   }

@@ -1,9 +1,7 @@
 ﻿using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Mongo
 {
@@ -14,13 +12,14 @@ namespace Mongo
         FilterDefinitionBuilder<T> Filter { get; }
         UpdateDefinitionBuilder<T> Updater { get; }
         ProjectionDefinitionBuilder<T> Project { get; }
-        #endregion MongoSpesific
+        #endregion MongoSpesific 
 
         #region CRUD
         T Get(string id);
         IEnumerable<T> Find(Expression<Func<T, bool>> filter);
         IEnumerable<T> Find(Expression<Func<T, bool>> filter, int pageIndex, int size);
-        IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool descending = true);
+        IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size);
+        IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending);
         void Insert(T entity);
         void Insert(IEnumerable<T> entities);
         void Replace(T entity);
@@ -32,11 +31,10 @@ namespace Mongo
         void Delete(string id);
         void Delete(T entity);
         void Delete(Expression<Func<T, bool>> filter);
-        #endregion CRUD
+        #endregion CRUD 
 
         #region Simplicity
         bool Any(Expression<Func<T, bool>> filter);
-        FilterDefinition<T> EntityFilter(string id, Expression<Func<T, bool>> filter);
         #endregion Simplicity
 
     }

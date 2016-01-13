@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using MongoDB.Driver;
 
 namespace Mongo
@@ -67,10 +66,15 @@ namespace Mongo
             return Find(filter, i => i.Id, pageIndex, size);
         }
 
-        public IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool descending = true)
+        public IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size)
+        {
+            return Find(filter, order, pageIndex, size, true);
+        }
+
+        public IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
         {
             var query = Query(filter).Skip(pageIndex * size).Limit(size);
-            return (descending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
+            return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
         }
 
         public void Insert(T entity)
@@ -136,10 +140,6 @@ namespace Mongo
         public bool Any(Expression<Func<T, bool>> filter)
         {
             return Collection.AsQueryable<T>().Any(filter);
-        }
-        public FilterDefinition<T> EntityFilter(string id, Expression<Func<T, bool>> filter)
-        {
-            return Filter.And(Filter.Eq(i => i.Id, id), Filter.Where(filter));
         }
         #endregion Simplicity
     }
