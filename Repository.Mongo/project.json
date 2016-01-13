@@ -1,0 +1,18 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "Repository.Mongo Class Library",
+  "authors": [ "UsameEsendir" ],
+  "tags": [ "mongo","repository" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "frameworks": {
+    "net46": {
+      "frameworkAssemblies": {
+        "System.Runtime.Serialization": "4.0.0.0"
+      }
+    }
+  },
+  "dependencies": {
+    "MongoDB.Driver": "2.2.1"
+  }
+}
