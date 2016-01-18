@@ -1,10 +1,13 @@
-﻿{
+{
+  "title": "Repository.Mongo",
   "version": "1.0.0-*",
-  "description": "Repository.Mongo Class Library",
-  "authors": [ "UsameEsendir" ],
-  "tags": [ "mongo","repository" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "description": "Repository pattern for MongoDB",
+  "authors": [ "Usame Esendir" ],
+  "owners": [ "Usame Esendir" ],
+  "tags": [ "mongo", "repository" ],
+  "projectUrl": "https://github.com/esendir/MongoRepository",
+  "summary": "This package contains entity and repository base classes which will help you to apply repository pattern for MongoDB. Your contribution is welcomed via github",
+  "releaseNotes": "First relase with simple CRUD operation which is specialized for MongoDB",
   "frameworks": {
     "net46": {
       "frameworkAssemblies": {
@@ -14,6 +17,6 @@
     }
   },
   "dependencies": {
-    "MongoDB.Driver": "2.2.1"
+    "MongoDB.Driver": "2.2.2"
   }
 }
