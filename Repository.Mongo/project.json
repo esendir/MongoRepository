@@ -2,9 +2,10 @@
   "version": "1.0.0-*",
   "description": "Repository.Mongo Class Library",
   "authors": [ "UsameEsendir" ],
-  "tags": [ "mongo","repository" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "tags": [ "mongo", "repository" ],
+  "projectUrl": "https://github.com/esendir/MongoRepository",
+  "summary": "This package contains entity and repository base classes to help you to apply repository pattern for MongoDB, your contribution is welcomed via github",
+  "releaseNotes": "First relase with simple CRUD operation which is specialized for MongoDB",
   "frameworks": {
     "net46": {
       "frameworkAssemblies": {
