@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
   "description": "Repository.Mongo Class Library",
   "authors": [ "UsameEsendir" ],
@@ -15,6 +15,6 @@
     }
   },
   "dependencies": {
-    "MongoDB.Driver": "2.2.1"
+    "MongoDB.Driver": "2.2.2"
   }
 }
