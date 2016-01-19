@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Runtime.Serialization;
 
-namespace Mongo
+namespace Repository.Mongo
 {
     [DataContract]
     [Serializable]

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Mongo
+namespace Repository.Mongo
 {
     public interface IRepository<T> where T : IEntity
     {
