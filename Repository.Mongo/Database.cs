@@ -3,7 +3,7 @@ using Repository.Mongo;
 using System;
 using System.Configuration;
 
-namespace Mongo
+namespace Repository.Mongo
 {
     internal class Database<T> where T : IEntity
     {

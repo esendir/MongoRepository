@@ -2,7 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Mongo
+namespace Repository.Mongo
 {
     public interface IEntity
     {

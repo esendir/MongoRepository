@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using MongoDB.Driver;
 
-namespace Mongo
+namespace Repository.Mongo
 {
     public class Repository<T> : IRepository<T>
         where T : IEntity
@@ -51,12 +51,12 @@ namespace Mongo
         #endregion MongoSpecific
 
         #region CRUD
-        public T Get(string id)
+        public virtual T Get(string id)
         {
-            return Collection.Find(i => i.Id == id).FirstOrDefault();
+            return Find(i => i.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<T> Find(Expression<Func<T, bool>> filter)
+        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> filter)
         {
             return Query(filter).ToEnumerable();
         }
@@ -71,23 +71,23 @@ namespace Mongo
             return Find(filter, order, pageIndex, size, true);
         }
 
-        public IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
+        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
         {
             var query = Query(filter).Skip(pageIndex * size).Limit(size);
             return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
         }
 
-        public void Insert(T entity)
+        public virtual void Insert(T entity)
         {
             Collection.InsertOne(entity);
         }
 
-        public void Insert(IEnumerable<T> entities)
+        public virtual void Insert(IEnumerable<T> entities)
         {
             Collection.InsertMany(entities);
         }
 
-        public void Replace(T entity)
+        public virtual void Replace(T entity)
         {
             Collection.ReplaceOne(i => i.Id == entity.Id, entity);
         }
@@ -100,19 +100,14 @@ namespace Mongo
             }
         }
 
-        public bool Update(T entity, UpdateDefinition<T> update)
-        {
-            return Update(Filter.Eq(i => i.Id, entity.Id), update);
-        }
-
-        public bool Update(FilterDefinition<T> filter, UpdateDefinition<T> update)
-        {
-            return Collection.UpdateMany(filter, update.CurrentDate(i => i.ModifiedOn)).IsAcknowledged;
-        }
-
         public bool Update<TField>(T entity, Expression<Func<T, TField>> field, TField value)
         {
-            return Update(Filter.Eq(i => i.Id, entity.Id), field, value);
+            return Update(entity, Updater.Set(field, value));
+        }
+
+        public virtual bool Update(T entity, UpdateDefinition<T> update)
+        {
+            return Update(Filter.Eq(i => i.Id, entity.Id), update);
         }
 
         public bool Update<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value)
@@ -120,14 +115,19 @@ namespace Mongo
             return Update(filter, Updater.Set(field, value));
         }
 
-        public void Delete(string id)
+        public bool Update(FilterDefinition<T> filter, UpdateDefinition<T> update)
         {
-            Collection.DeleteOne(i => i.Id == id);
+            return Collection.UpdateMany(filter, update.CurrentDate(i => i.ModifiedOn)).IsAcknowledged;
         }
 
         public void Delete(T entity)
         {
             Delete(entity.Id);
+        }
+
+        public virtual void Delete(string id)
+        {
+            Collection.DeleteOne(i => i.Id == id);
         }
 
         public void Delete(Expression<Func<T, bool>> filter)
