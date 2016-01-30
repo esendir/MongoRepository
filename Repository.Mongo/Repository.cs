@@ -53,7 +53,7 @@ namespace Repository.Mongo
         #region CRUD
         public virtual T Get(string id)
         {
-            return Collection.Find(i => i.Id == id).FirstOrDefault();
+            return Find(i => i.Id == id).FirstOrDefault();
         }
 
         public virtual IEnumerable<T> Find(Expression<Func<T, bool>> filter)
@@ -61,12 +61,12 @@ namespace Repository.Mongo
             return Query(filter).ToEnumerable();
         }
 
-        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> filter, int pageIndex, int size)
+        public IEnumerable<T> Find(Expression<Func<T, bool>> filter, int pageIndex, int size)
         {
             return Find(filter, i => i.Id, pageIndex, size);
         }
 
-        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size)
+        public IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size)
         {
             return Find(filter, order, pageIndex, size, true);
         }
@@ -92,7 +92,7 @@ namespace Repository.Mongo
             Collection.ReplaceOne(i => i.Id == entity.Id, entity);
         }
 
-        public virtual void Replace(IEnumerable<T> entities)
+        public void Replace(IEnumerable<T> entities)
         {
             foreach (T entity in entities)
             {
@@ -100,24 +100,29 @@ namespace Repository.Mongo
             }
         }
 
+        public bool Update<TField>(T entity, Expression<Func<T, TField>> field, TField value)
+        {
+            return Update(entity, Updater.Set(field, value));
+        }
+
         public virtual bool Update(T entity, UpdateDefinition<T> update)
         {
             return Update(Filter.Eq(i => i.Id, entity.Id), update);
         }
 
-        public virtual bool Update(FilterDefinition<T> filter, UpdateDefinition<T> update)
+        public bool Update<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value)
+        {
+            return Update(filter, Updater.Set(field, value));
+        }
+
+        public bool Update(FilterDefinition<T> filter, UpdateDefinition<T> update)
         {
             return Collection.UpdateMany(filter, update.CurrentDate(i => i.ModifiedOn)).IsAcknowledged;
         }
 
-        public virtual bool Update<TField>(T entity, Expression<Func<T, TField>> field, TField value)
+        public void Delete(T entity)
         {
-            return Update(Filter.Eq(i => i.Id, entity.Id), field, value);
-        }
-
-        public virtual bool Update<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value)
-        {
-            return Update(filter, Updater.Set(field, value));
+            Delete(entity.Id);
         }
 
         public virtual void Delete(string id)
@@ -125,19 +130,14 @@ namespace Repository.Mongo
             Collection.DeleteOne(i => i.Id == id);
         }
 
-        public virtual void Delete(T entity)
-        {
-            Delete(entity.Id);
-        }
-
-        public virtual void Delete(Expression<Func<T, bool>> filter)
+        public void Delete(Expression<Func<T, bool>> filter)
         {
             Collection.DeleteMany(filter);
         }
         #endregion CRUD
 
         #region Simplicity
-        public virtual bool Any(Expression<Func<T, bool>> filter)
+        public bool Any(Expression<Func<T, bool>> filter)
         {
             return Collection.AsQueryable<T>().Any(filter);
         }

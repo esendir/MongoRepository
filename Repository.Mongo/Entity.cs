@@ -32,7 +32,7 @@ namespace Repository.Mongo
         {
             get
             {
-                //Incase this is required before inserted into db
+                //Incase, this is required before inserted into db
                 if (Id == null)
                     Id = ObjectId.GenerateNewId().ToString();
                 return ObjectId.Parse(Id);
