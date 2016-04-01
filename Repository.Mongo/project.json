@@ -16,6 +16,6 @@
     }
   },
   "dependencies": {
-    "MongoDB.Driver": "2.2.2"
+    "MongoDB.Driver": "2.2.3"
   }
 }
