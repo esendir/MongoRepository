@@ -216,12 +216,23 @@ namespace Repository.Mongo
         /// <summary>
         /// update an entity with updated fields
         /// </summary>
+        /// <param name="id">id</param>
+        /// <param name="update">updated field(s)</param>
+        /// <returns>true if successful, otherwise false</returns>
+        public virtual bool Update(string id, UpdateDefinition<T> update)
+        {
+            return Update(Filter.Eq(i => i.Id, id), update);
+        }
+
+        /// <summary>
+        /// update an entity with updated fields
+        /// </summary>
         /// <param name="entity">entity</param>
         /// <param name="update">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public virtual bool Update(T entity, UpdateDefinition<T> update)
         {
-            return Update(Filter.Eq(i => i.Id, entity.Id), update);
+            return Update(entity.Id, update);
         }
 
         /// <summary>
@@ -244,6 +255,17 @@ namespace Repository.Mongo
         /// <param name="update">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public bool Update(FilterDefinition<T> filter, UpdateDefinition<T> update)
+        {
+            return Collection.UpdateMany(filter, update.CurrentDate(i => i.ModifiedOn)).IsAcknowledged;
+        }
+
+        /// <summary>
+        /// update found entities by filter with updated fields
+        /// </summary>
+        /// <param name="filter">collection filter</param>
+        /// <param name="update">updated field(s)</param>
+        /// <returns>true if successful, otherwise false</returns>
+        public bool Update(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)
         {
             return Collection.UpdateMany(filter, update.CurrentDate(i => i.ModifiedOn)).IsAcknowledged;
         }
