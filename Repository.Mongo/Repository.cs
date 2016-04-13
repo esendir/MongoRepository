@@ -153,6 +153,52 @@ namespace Repository.Mongo
         }
 
         /// <summary>
+        /// fetch all items in collection
+        /// </summary>
+        /// <returns>collection of entity</returns>
+        public IEnumerable<T> FindAll()
+        {
+            return Find(i => i.Id != string.Empty);
+        }
+
+        /// <summary>
+        /// fetch all items in collection with paging
+        /// </summary>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        public IEnumerable<T> FindAll(int pageIndex, int size)
+        {
+            return Find(i => i.Id != string.Empty, pageIndex, size);
+        }
+
+        /// <summary>
+        /// fetch all items in collection with paging and ordering
+        /// default ordering is descending
+        /// </summary>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        public IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size)
+        {
+            return Find(i => i.Id != string.Empty, order, pageIndex, size);
+        }
+
+        /// <summary>
+        /// fetch all items in collection with paging and ordering in direction
+        /// </summary>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>collection of entity</returns>
+        public IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
+        {
+            return Find(i => i.Id != string.Empty, order, pageIndex, size, isDescending);
+        }
+
+        /// <summary>
         /// get by id
         /// </summary>
         /// <param name="id">id value</param>
