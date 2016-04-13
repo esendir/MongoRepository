@@ -125,6 +125,7 @@ namespace Repository.Mongo
 
         /// <summary>
         /// find entities with paging and ordering
+        /// default ordering is descending
         /// </summary>
         /// <param name="filter">expression filter</param>
         /// <param name="order">ordering parameters</param>
