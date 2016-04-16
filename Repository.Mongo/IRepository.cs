@@ -155,7 +155,7 @@ namespace Repository.Mongo
         T First(Expression<Func<T, bool>> filter);
 
         /// <summary>
-        /// get first item in query
+        /// get first item in query with order
         /// </summary>
         /// <param name="filter">expression filter</param>
         /// <param name="order">ordering parameters</param>
@@ -163,7 +163,7 @@ namespace Repository.Mongo
         T First(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order);
 
         /// <summary>
-        /// get first item in query
+        /// get first item in query with order and direction
         /// </summary>
         /// <param name="filter">expression filter</param>
         /// <param name="order">ordering parameters</param>
@@ -199,6 +199,40 @@ namespace Repository.Mongo
         void Insert(IEnumerable<T> entities);
 
         #endregion Insert
+
+        #region Last
+
+        /// <summary>
+        /// get last item in collection
+        /// </summary>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T Last();
+
+        /// <summary>
+        /// get last item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T Last(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// get last item in query with order
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T Last(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order);
+
+        /// <summary>
+        /// get last item in query with order and direction
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T Last(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending);
+
+        #endregion Last
 
         #region Replace
 
