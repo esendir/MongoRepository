@@ -37,6 +37,8 @@ namespace Repository.Mongo
 
         #region CRUD
 
+        #region Delete
+
         /// <summary>
         /// delete by id
         /// </summary>
@@ -54,6 +56,10 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter">expression filter</param>
         void Delete(Expression<Func<T, bool>> filter);
+
+        #endregion Delete
+
+        #region Find
 
         /// <summary>
         /// find entities
@@ -93,6 +99,10 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending);
 
+        #endregion Find
+
+        #region FindAll
+
         /// <summary>
         /// fetch all items in collection
         /// </summary>
@@ -127,12 +137,54 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending);
 
+        #endregion FindAll
+
+        #region First
+
+        /// <summary>
+        /// get first item in collection
+        /// </summary>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T First();
+
+        /// <summary>
+        /// get first item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T First(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// get first item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T First(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order);
+
+        /// <summary>
+        /// get first item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T First(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending);
+
+        #endregion First
+
+        #region Get
+
         /// <summary>
         /// get by id
         /// </summary>
         /// <param name="id">id value</param>
         /// <returns>entity of <typeparamref name="T"/></returns>
         T Get(string id);
+
+        #endregion Get
+
+        #region Insert
 
         /// <summary>
         /// insert entity
@@ -146,6 +198,10 @@ namespace Repository.Mongo
         /// <param name="entities">collection of entities</param>
         void Insert(IEnumerable<T> entities);
 
+        #endregion Insert
+
+        #region Replace
+
         /// <summary>
         /// replace an existing entity
         /// </summary>
@@ -157,6 +213,10 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="entities">collection of entities</param>
         void Replace(IEnumerable<T> entities);
+
+        #endregion Replace
+
+        #region Update
 
         /// <summary>
         /// update an entity with updated fields
@@ -209,6 +269,8 @@ namespace Repository.Mongo
         /// <param name="value">new value</param>
         /// <returns>true if successful, otherwise false</returns>
         bool Update<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value);
+
+        #endregion Update
 
         #endregion CRUD
 
