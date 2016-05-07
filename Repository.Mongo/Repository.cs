@@ -384,9 +384,9 @@ namespace Repository.Mongo
         /// <param name="id">id</param>
         /// <param name="update">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
-        public virtual bool Update(string id, UpdateDefinition<T> update)
+        public virtual bool Update(string id, params UpdateDefinition<T>[] updates)
         {
-            return Update(Filter.Eq(i => i.Id, id), update);
+            return Update(Filter.Eq(i => i.Id, id), updates);
         }
 
         /// <summary>
@@ -395,9 +395,9 @@ namespace Repository.Mongo
         /// <param name="entity">entity</param>
         /// <param name="update">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
-        public virtual bool Update(T entity, UpdateDefinition<T> update)
+        public virtual bool Update(T entity, params UpdateDefinition<T>[] updates)
         {
-            return Update(entity.Id, update);
+            return Update(entity.Id, updates);
         }
 
         /// <summary>
@@ -419,8 +419,9 @@ namespace Repository.Mongo
         /// <param name="filter">collection filter</param>
         /// <param name="update">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
-        public bool Update(FilterDefinition<T> filter, UpdateDefinition<T> update)
+        public bool Update(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates)
         {
+            var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
             return Collection.UpdateMany(filter, update.CurrentDate(i => i.ModifiedOn)).IsAcknowledged;
         }
 
@@ -430,9 +431,10 @@ namespace Repository.Mongo
         /// <param name="filter">collection filter</param>
         /// <param name="update">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
-        public bool Update(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)
+        public bool Update(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates)
         {
-            return Collection.UpdateMany(filter, update.CurrentDate(i => i.ModifiedOn)).IsAcknowledged;
+            var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
+            return Collection.UpdateMany(filter, update).IsAcknowledged;
         }
 
         #endregion Update
