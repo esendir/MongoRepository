@@ -1,6 +1,6 @@
 {
   "title": "Repository.Mongo",
-  "version": "1.0.2-rc4",
+  "version": "1.0.2-rc6",
   "description": "Repository pattern for MongoDB",
   "authors": [ "UsameEsendir" ],
   "tags": [ "mongo", "repository" ],

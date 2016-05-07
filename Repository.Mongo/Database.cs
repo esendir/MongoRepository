@@ -125,14 +125,14 @@ namespace Repository.Mongo
             }
             else
             {
-                if (typeof(Entity).IsAssignableFrom(entitytype))
-                {
-                    // No attribute found, get the basetype
-                    while (!entitytype.BaseType.Equals(typeof(Entity)))
-                    {
-                        entitytype = entitytype.BaseType;
-                    }
-                }
+                //if (typeof(Entity).IsAssignableFrom(entitytype))
+                //{
+                //    // No attribute found, get the basetype
+                //    while (!entitytype.BaseType.Equals(typeof(Entity)))
+                //    {
+                //        entitytype = entitytype.BaseType;
+                //    }
+                //}
                 collectionname = entitytype.Name;
             }
 
