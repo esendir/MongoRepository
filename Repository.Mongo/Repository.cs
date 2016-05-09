@@ -192,7 +192,7 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size)
         {
-            return Find(i => i.Id != string.Empty, order, pageIndex, size);
+            return FindAll(order, pageIndex, size, true);
         }
 
         /// <summary>
@@ -205,7 +205,8 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
         {
-            return Find(i => i.Id != string.Empty, order, pageIndex, size, isDescending);
+            var query = Collection.Find(Filter.Empty).Skip(pageIndex * size).Limit(size);
+            return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
         }
 
         #endregion FindAll
