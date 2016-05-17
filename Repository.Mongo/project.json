@@ -5,7 +5,7 @@
   "authors": [ "UsameEsendir" ],
   "tags": [ "mongo", "repository" ],
   "projectUrl": "https://github.com/esendir/MongoRepository",
-  "summary": "This package contains entity and repository base classes which will help you to apply repository pattern for MongoDB. Your contribution is welcomed via github",
+  "summary": "This package contains entity and repository base classes which will help you to apply repository pattern for MongoDB",
   "releaseNotes": "Mongo driver updated, documentation updated",
   "frameworks": {
     "net46": {
