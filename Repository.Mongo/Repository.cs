@@ -168,7 +168,7 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public IEnumerable<T> FindAll()
         {
-            return Find(i => i.Id != string.Empty);
+            return Collection.Find(Filter.Empty).ToEnumerable();
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public IEnumerable<T> FindAll(int pageIndex, int size)
         {
-            return Find(i => i.Id != string.Empty, pageIndex, size);
+            return FindAll(i => i.Id, pageIndex, size);
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         public T First()
         {
-            return First(i => i.Id != string.Empty);
+            return FindAll(i => i.Id, 0, 1, false).FirstOrDefault();
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         public T Last()
         {
-            return Last(i => i.Id != string.Empty);
+            return FindAll(i => i.Id, 0, 1, true).FirstOrDefault();
         }
 
         /// <summary>
