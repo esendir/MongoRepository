@@ -1,15 +1,12 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
-using System.Runtime.Serialization;
 
 namespace Repository.Mongo
 {
     /// <summary>
     /// mongo entity
     /// </summary>
-    [DataContract]
-    [Serializable]
     [BsonIgnoreExtraElements(Inherited = true)]
     public class Entity : IEntity
     {
@@ -27,7 +24,6 @@ namespace Repository.Mongo
         /// <summary>
         /// id in string format
         /// </summary>
-        [DataMember]
         [BsonElement(Order = 0)]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
@@ -35,7 +31,6 @@ namespace Repository.Mongo
         /// <summary>
         /// modify date
         /// </summary>
-        [DataMember]
         [BsonElement("_m", Order = 1)]
         [BsonRepresentation(BsonType.DateTime)]
         public DateTime ModifiedOn { get; set; }
