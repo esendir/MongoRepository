@@ -19,5 +19,8 @@
   },
   "dependencies": {
     "MongoDB.Driver": "2.2.4"
+  },
+  "buildOptions": {
+    "xmlDoc": true
   }
 }
