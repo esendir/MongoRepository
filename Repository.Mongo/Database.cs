@@ -1,5 +1,4 @@
 ﻿using MongoDB.Driver;
-using Repository.Mongo;
 using System;
 using System.Configuration;
 
@@ -7,17 +6,8 @@ namespace Repository.Mongo
 {
     internal class Database<T> where T : IEntity
     {
-        private Database() { }
-
-        /// <summary>
-        /// Creates and returns a MongoDatabase from the specified url.
-        /// </summary>
-        /// <param name="url">The url to use to get the database from.</param>
-        /// <returns>Returns a MongoDatabase from the specified url.</returns>
-        private static IMongoDatabase GetDatabaseFromUrl(MongoUrl url)
+        private Database()
         {
-            var client = new MongoClient(url);
-            return client.GetDatabase(url.DatabaseName); // WriteConcern defaulted to Acknowledged
         }
 
         internal static IMongoCollection<T> GetCollection()
@@ -35,7 +25,6 @@ namespace Repository.Mongo
         {
             return GetCollectionFromConnectionString(connectionString, GetCollectionName());
         }
-
 
         /// <summary>
         /// Creates and returns a MongoCollection from the specified type and connectionstring.
@@ -72,7 +61,19 @@ namespace Repository.Mongo
             return GetDatabaseFromUrl(url).GetCollection<T>(collectionName);
         }
 
+        /// <summary>
+        /// Creates and returns a MongoDatabase from the specified url.
+        /// </summary>
+        /// <param name="url">The url to use to get the database from.</param>
+        /// <returns>Returns a MongoDatabase from the specified url.</returns>
+        private static IMongoDatabase GetDatabaseFromUrl(MongoUrl url)
+        {
+            var client = new MongoClient(url);
+            return client.GetDatabase(url.DatabaseName); // WriteConcern defaulted to Acknowledged
+        }
+
         #region Collection Name
+
         /// <summary>
         /// Determines the collection name for T and assures it is not empty
         /// </summary>
@@ -124,22 +125,24 @@ namespace Repository.Mongo
             }
             else
             {
-                if (typeof(Entity).IsAssignableFrom(entitytype))
-                {
-                    // No attribute found, get the basetype
-                    while (!entitytype.BaseType.Equals(typeof(Entity)))
-                    {
-                        entitytype = entitytype.BaseType;
-                    }
-                }
+                //if (typeof(Entity).IsAssignableFrom(entitytype))
+                //{
+                //    // No attribute found, get the basetype
+                //    while (!entitytype.BaseType.Equals(typeof(Entity)))
+                //    {
+                //        entitytype = entitytype.BaseType;
+                //    }
+                //}
                 collectionname = entitytype.Name;
             }
 
             return collectionname;
         }
+
         #endregion Collection Name
 
         #region Connection Name
+
         /// <summary>
         /// Determines the connection name for T and assures it is not empty
         /// </summary>
@@ -204,9 +207,11 @@ namespace Repository.Mongo
 
             return collectionname;
         }
+
         #endregion Connection Name
 
         #region Connection String
+
         /// <summary>
         /// Retrieves the default connectionstring from the App.config or Web.config file.
         /// </summary>
@@ -215,6 +220,7 @@ namespace Repository.Mongo
         {
             return ConfigurationManager.ConnectionStrings[GetConnectionName()].ConnectionString;
         }
+
         #endregion Connection String
     }
 }
