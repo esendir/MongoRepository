@@ -26,7 +26,7 @@ namespace Repository.Mongo
         /// </summary>
         [BsonElement(Order = 0)]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
 
         /// <summary>
         /// modify date
@@ -42,9 +42,6 @@ namespace Repository.Mongo
         {
             get
             {
-                //Incase, this is required before inserted into db
-                if (Id == null)
-                    Id = ObjectId.GenerateNewId().ToString();
                 return ObjectId.Parse(Id);
             }
         }
