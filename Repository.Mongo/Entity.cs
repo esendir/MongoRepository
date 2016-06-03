@@ -10,6 +10,11 @@ namespace Repository.Mongo
     [BsonIgnoreExtraElements(Inherited = true)]
     public class Entity : IEntity
     {
+        public Entity()
+        {
+            Id = ObjectId.GenerateNewId().ToString();
+        }
+
         /// <summary>
         /// create date
         /// </summary>
@@ -26,7 +31,7 @@ namespace Repository.Mongo
         /// </summary>
         [BsonElement(Order = 0)]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+        public string Id { get; set; }
 
         /// <summary>
         /// modify date
@@ -42,6 +47,9 @@ namespace Repository.Mongo
         {
             get
             {
+                //Incase, this is required if db record is null
+                if (Id == null)
+                    Id = ObjectId.GenerateNewId().ToString();
                 return ObjectId.Parse(Id);
             }
         }
