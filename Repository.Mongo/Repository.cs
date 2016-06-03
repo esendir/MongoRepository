@@ -1,6 +1,9 @@
 ﻿using MongoDB.Driver;
+using Polly;
+using Polly.Retry;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -70,6 +73,10 @@ namespace Repository.Mongo
             return Collection.Find(filter);
         }
 
+        private IFindFluent<T, T> Query()
+        {
+            return Collection.Find(Filter.Empty);
+        }
         #endregion MongoSpecific
 
         #region CRUD
@@ -91,7 +98,10 @@ namespace Repository.Mongo
         /// <param name="id">id</param>
         public virtual void Delete(string id)
         {
-            Collection.DeleteOne(i => i.Id == id);
+            Retry(() =>
+            {
+                return Collection.DeleteOne(i => i.Id == id);
+            });
         }
 
         /// <summary>
@@ -100,7 +110,10 @@ namespace Repository.Mongo
         /// <param name="filter">expression filter</param>
         public void Delete(Expression<Func<T, bool>> filter)
         {
-            Collection.DeleteMany(filter);
+            Retry(() =>
+            {
+                return Collection.DeleteMany(filter);
+            });
         }
 
         #endregion Delete
@@ -154,8 +167,11 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public virtual IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
         {
-            var query = Query(filter).Skip(pageIndex * size).Limit(size);
-            return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
+            return Retry(() =>
+            {
+                var query = Query(filter).Skip(pageIndex * size).Limit(size);
+                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
+            });
         }
 
         #endregion Find
@@ -168,7 +184,10 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public IEnumerable<T> FindAll()
         {
-            return Collection.Find(Filter.Empty).ToEnumerable();
+            return Retry(() =>
+            {
+                return Query().ToEnumerable();
+            });
         }
 
         /// <summary>
@@ -205,8 +224,11 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
         {
-            var query = Collection.Find(Filter.Empty).Skip(pageIndex * size).Limit(size);
-            return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
+            return Retry(() =>
+            {
+                var query = Query().Skip(pageIndex * size).Limit(size);
+                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
+            });
         }
 
         #endregion FindAll
@@ -266,7 +288,10 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         public virtual T Get(string id)
         {
-            return Find(i => i.Id == id).FirstOrDefault();
+            return Retry(() =>
+            {
+                return Find(i => i.Id == id).FirstOrDefault();
+            });
         }
 
         #endregion Get
@@ -279,7 +304,11 @@ namespace Repository.Mongo
         /// <param name="entity">entity</param>
         public virtual void Insert(T entity)
         {
-            Collection.InsertOne(entity);
+            Retry(() =>
+            {
+                Collection.InsertOne(entity);
+                return true;
+            });
         }
 
         /// <summary>
@@ -288,7 +317,11 @@ namespace Repository.Mongo
         /// <param name="entities">collection of entities</param>
         public virtual void Insert(IEnumerable<T> entities)
         {
-            Collection.InsertMany(entities);
+            Retry(() =>
+            {
+                Collection.InsertMany(entities);
+                return true;
+            });
         }
 
         #endregion Insert
@@ -347,7 +380,10 @@ namespace Repository.Mongo
         /// <param name="entity">entity</param>
         public virtual void Replace(T entity)
         {
-            Collection.ReplaceOne(i => i.Id == entity.Id, entity);
+            Retry(() =>
+            {
+                return Collection.ReplaceOne(i => i.Id == entity.Id, entity);
+            });
         }
 
         /// <summary>
@@ -422,8 +458,11 @@ namespace Repository.Mongo
         /// <returns>true if successful, otherwise false</returns>
         public bool Update(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates)
         {
-            var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
-            return Collection.UpdateMany(filter, update.CurrentDate(i => i.ModifiedOn)).IsAcknowledged;
+            return Retry(() =>
+            {
+                var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
+                return Collection.UpdateMany(filter, update.CurrentDate(i => i.ModifiedOn)).IsAcknowledged;
+            });
         }
 
         /// <summary>
@@ -434,8 +473,11 @@ namespace Repository.Mongo
         /// <returns>true if successful, otherwise false</returns>
         public bool Update(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates)
         {
-            var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
-            return Collection.UpdateMany(filter, update).IsAcknowledged;
+            return Retry(() =>
+            {
+                var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
+                return Collection.UpdateMany(filter, update).IsAcknowledged;
+            });
         }
 
         #endregion Update
@@ -451,9 +493,35 @@ namespace Repository.Mongo
         /// <returns>true if exists, otherwise false</returns>
         public bool Any(Expression<Func<T, bool>> filter)
         {
-            return Collection.AsQueryable<T>().Any(filter);
+            return Retry(() =>
+            {
+                return Collection.AsQueryable<T>().Any(filter);
+            });
         }
 
         #endregion Simplicity
+
+        #region RetryPolicy
+        /// <summary>
+        /// retry operation for three times if IOException occurs
+        /// </summary>
+        /// <typeparam name="TResult">return type</typeparam>
+        /// <param name="action">action</param>
+        /// <returns>action result</returns>
+        /// <example>
+        /// return Retry(() => 
+        /// { 
+        ///     do_something;
+        ///     return something;
+        /// });
+        /// </example>
+        protected virtual TResult Retry<TResult>(Func<TResult> action)
+        {
+            return RetryPolicy
+                .Handle<MongoConnectionException>(i => i.InnerException.GetType() == typeof(IOException))
+                .Retry(3)
+                .Execute(action);
+        }
+        #endregion
     }
 }

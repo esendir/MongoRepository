@@ -1,6 +1,6 @@
 {
   "title": "Repository.Mongo",
-  "version": "1.0.2",
+  "version": "1.0.3-rc1",
   "description": "Repository pattern for MongoDB",
   "authors": [ "UsameEsendir" ],
   "packOptions": {
@@ -18,7 +18,8 @@
     }
   },
   "dependencies": {
-    "MongoDB.Driver": "2.2.4"
+    "MongoDB.Driver": "2.2.4",
+    "Polly": "4.2.2"
   },
   "buildOptions": {
     "xmlDoc": true
