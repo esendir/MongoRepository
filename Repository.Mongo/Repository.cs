@@ -127,7 +127,7 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public virtual IEnumerable<T> Find(Expression<Func<T, bool>> filter)
         {
-            return Query(filter).ToEnumerable();
+            return Query(filter).ToList();
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Repository.Mongo
             return Retry(() =>
             {
                 var query = Query(filter).Skip(pageIndex * size).Limit(size);
-                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
+                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToList();
             });
         }
 
@@ -186,7 +186,7 @@ namespace Repository.Mongo
         {
             return Retry(() =>
             {
-                return Query().ToEnumerable();
+                return Query().ToList();
             });
         }
 
@@ -227,7 +227,7 @@ namespace Repository.Mongo
             return Retry(() =>
             {
                 var query = Query().Skip(pageIndex * size).Limit(size);
-                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
+                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToList();
             });
         }
 
