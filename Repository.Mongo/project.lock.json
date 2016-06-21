@@ -37,7 +37,7 @@
           "lib/net45/MongoDB.Driver.Core.dll": {}
         }
       },
-      "Polly/4.2.2": {
+      "Polly/4.2.4": {
         "type": "package",
         "compile": {
           "lib/net45/Polly.dll": {}
@@ -84,11 +84,11 @@
         "lib/net45/MongoDB.Driver.Core.dll"
       ]
     },
-    "Polly/4.2.2": {
-      "sha512": "7tRThf0phshToQmiI4vEVMTn0y717zKDVEMw3pDdNb0JkgDscj0G9dJYVm0c+LZh1XCLD2ebuIt5xzUztPGFWw==",
+    "Polly/4.2.4": {
+      "sha512": "aP4iv37mercCwNhy2zbBBAOywSckbsiOjvKjKPYdZSgL9kjrcm9pqHuvHMwoqnVqSH1TiKOL5Mtt/QVsND24hA==",
       "type": "package",
       "files": [
-        "Polly.4.2.2.nupkg.sha512",
+        "Polly.4.2.4.nupkg.sha512",
         "Polly.nuspec",
         "lib/dotnet/Polly.XML",
         "lib/dotnet/Polly.dll",
@@ -96,22 +96,9 @@
         "lib/net35/Polly.XML",
         "lib/net35/Polly.dll",
         "lib/net35/Polly.pdb",
-        "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll",
-        "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.xml",
-        "lib/net40/Microsoft.Threading.Tasks.Extensions.dll",
-        "lib/net40/Microsoft.Threading.Tasks.Extensions.xml",
-        "lib/net40/Microsoft.Threading.Tasks.dll",
-        "lib/net40/Microsoft.Threading.Tasks.xml",
-        "lib/net40/Polly.Net40Async.dll",
-        "lib/net40/Polly.Net40Async.dll.config",
-        "lib/net40/Polly.Net40Async.pdb",
         "lib/net40/Polly.XML",
         "lib/net40/Polly.dll",
         "lib/net40/Polly.pdb",
-        "lib/net40/System.Runtime.dll",
-        "lib/net40/System.Runtime.xml",
-        "lib/net40/System.Threading.Tasks.dll",
-        "lib/net40/System.Threading.Tasks.xml",
         "lib/net45/Polly.XML",
         "lib/net45/Polly.dll",
         "lib/net45/Polly.pdb",
@@ -124,7 +111,7 @@
   "projectFileDependencyGroups": {
     "": [
       "MongoDB.Driver >= 2.2.4",
-      "Polly >= 4.2.2"
+      "Polly >= 4.2.4"
     ],
     ".NETFramework,Version=v4.6": [
       "System.Configuration >= 4.0.0",
