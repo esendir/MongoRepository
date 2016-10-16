@@ -37,7 +37,7 @@
           "lib/net45/MongoDB.Driver.Core.dll": {}
         }
       },
-      "Polly/4.2.4": {
+      "Polly/4.3.0": {
         "type": "package",
         "compile": {
           "lib/net45/Polly.dll": {}
@@ -84,11 +84,12 @@
         "lib/net45/MongoDB.Driver.Core.dll"
       ]
     },
-    "Polly/4.2.4": {
-      "sha512": "aP4iv37mercCwNhy2zbBBAOywSckbsiOjvKjKPYdZSgL9kjrcm9pqHuvHMwoqnVqSH1TiKOL5Mtt/QVsND24hA==",
+    "Polly/4.3.0": {
+      "sha512": "N0rtx8D4WOHTCL85tdXhdjRxj6mlUPFeNcp3ev1h6L4VGIhIY3usjEPhQ4rwkwHgoNjoVNpNhB76o4KV1crJaQ==",
       "type": "package",
+      "path": "Polly/4.3.0",
       "files": [
-        "Polly.4.2.4.nupkg.sha512",
+        "Polly.4.3.0.nupkg.sha512",
         "Polly.nuspec",
         "lib/dotnet/Polly.XML",
         "lib/dotnet/Polly.dll",
@@ -111,7 +112,7 @@
   "projectFileDependencyGroups": {
     "": [
       "MongoDB.Driver >= 2.2.4",
-      "Polly >= 4.2.4"
+      "Polly >= 4.3.0"
     ],
     ".NETFramework,Version=v4.6": [
       "System.Configuration >= 4.0.0",

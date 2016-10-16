@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "MongoDB.Driver": "2.2.4",
-    "Polly": "4.2.4"
+    "Polly": "4.3.0"
   },
   "buildOptions": {
     "xmlDoc": true

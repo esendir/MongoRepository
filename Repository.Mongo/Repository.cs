@@ -182,7 +182,7 @@ namespace Repository.Mongo
         /// fetch all items in collection
         /// </summary>
         /// <returns>collection of entity</returns>
-        public IEnumerable<T> FindAll()
+        public virtual IEnumerable<T> FindAll()
         {
             return Retry(() =>
             {
@@ -222,7 +222,7 @@ namespace Repository.Mongo
         /// <param name="size">number of items in page</param>
         /// <param name="isDescending">ordering direction</param>
         /// <returns>collection of entity</returns>
-        public IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
+        public virtual IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
         {
             return Retry(() =>
             {
