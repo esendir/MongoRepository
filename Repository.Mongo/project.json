@@ -1,13 +1,13 @@
 {
   "title": "Repository.Mongo",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Repository pattern for MongoDB",
   "authors": [ "UsameEsendir" ],
   "packOptions": {
     "tags": [ "mongo", "repository" ],
     "projectUrl": "https://github.com/esendir/MongoRepository",
     "summary": "This package contains entity and repository base classes which will help you to apply repository pattern for MongoDB",
-    "releaseNotes": "Mongo driver updated, documentation updated"
+    "releaseNotes": "retry policy with polly and auto generated entity id"
   },
   "frameworks": {
     "net46": {
@@ -18,7 +18,8 @@
     }
   },
   "dependencies": {
-    "MongoDB.Driver": "2.2.4"
+    "MongoDB.Driver": "2.2.4",
+    "Polly": "4.3.0"
   },
   "buildOptions": {
     "xmlDoc": true

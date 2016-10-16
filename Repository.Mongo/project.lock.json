@@ -36,125 +36,89 @@
         "runtime": {
           "lib/net45/MongoDB.Driver.Core.dll": {}
         }
-      }
-    },
-    ".NETFramework,Version=v4.6/win7-x86": {
-      "MongoDB.Bson/2.2.4": {
-        "type": "package",
-        "compile": {
-          "lib/net45/MongoDB.Bson.dll": {}
-        },
-        "runtime": {
-          "lib/net45/MongoDB.Bson.dll": {}
-        }
       },
-      "MongoDB.Driver/2.2.4": {
-        "type": "package",
-        "dependencies": {
-          "MongoDB.Bson": "2.2.4",
-          "MongoDB.Driver.Core": "2.2.4"
-        },
-        "compile": {
-          "lib/net45/MongoDB.Driver.dll": {}
-        },
-        "runtime": {
-          "lib/net45/MongoDB.Driver.dll": {}
-        }
-      },
-      "MongoDB.Driver.Core/2.2.4": {
-        "type": "package",
-        "dependencies": {
-          "MongoDB.Bson": "2.2.4"
-        },
-        "compile": {
-          "lib/net45/MongoDB.Driver.Core.dll": {}
-        },
-        "runtime": {
-          "lib/net45/MongoDB.Driver.Core.dll": {}
-        }
-      }
-    },
-    ".NETFramework,Version=v4.6/win7-x64": {
-      "MongoDB.Bson/2.2.4": {
+      "Polly/4.3.0": {
         "type": "package",
         "compile": {
-          "lib/net45/MongoDB.Bson.dll": {}
+          "lib/net45/Polly.dll": {}
         },
         "runtime": {
-          "lib/net45/MongoDB.Bson.dll": {}
-        }
-      },
-      "MongoDB.Driver/2.2.4": {
-        "type": "package",
-        "dependencies": {
-          "MongoDB.Bson": "2.2.4",
-          "MongoDB.Driver.Core": "2.2.4"
-        },
-        "compile": {
-          "lib/net45/MongoDB.Driver.dll": {}
-        },
-        "runtime": {
-          "lib/net45/MongoDB.Driver.dll": {}
-        }
-      },
-      "MongoDB.Driver.Core/2.2.4": {
-        "type": "package",
-        "dependencies": {
-          "MongoDB.Bson": "2.2.4"
-        },
-        "compile": {
-          "lib/net45/MongoDB.Driver.Core.dll": {}
-        },
-        "runtime": {
-          "lib/net45/MongoDB.Driver.Core.dll": {}
+          "lib/net45/Polly.dll": {}
         }
       }
     }
   },
   "libraries": {
     "MongoDB.Bson/2.2.4": {
-      "type": "package",
       "sha512": "Q3TLxEVx5MsoXgqHqUFAh15kGJmgv1pvgXtm4/d9E22Ee8X9jVoPC8zIgIuQddO771Zbn9chJE+5QLfgxZl25Q==",
+      "type": "package",
       "files": [
-        "lib/net45/MongoDB.Bson.dll",
-        "lib/net45/MongoDB.Bson.XML",
         "License.rtf",
         "MongoDB.Bson.2.2.4.nupkg",
         "MongoDB.Bson.2.2.4.nupkg.sha512",
-        "MongoDB.Bson.nuspec"
+        "MongoDB.Bson.nuspec",
+        "lib/net45/MongoDB.Bson.XML",
+        "lib/net45/MongoDB.Bson.dll"
       ]
     },
     "MongoDB.Driver/2.2.4": {
-      "type": "package",
       "sha512": "iWvQlPMSeA8oe7LqfgqZ0txY8+/Ns6qD/efR3tcMT4DgYT4W1vJZ4A8dfegeIZV3kKIiFA+L4ALgww5nfJtcBg==",
+      "type": "package",
       "files": [
-        "lib/net45/MongoDB.Driver.dll",
-        "lib/net45/MongoDB.Driver.XML",
         "License.rtf",
         "MongoDB.Driver.2.2.4.nupkg",
         "MongoDB.Driver.2.2.4.nupkg.sha512",
-        "MongoDB.Driver.nuspec"
+        "MongoDB.Driver.nuspec",
+        "lib/net45/MongoDB.Driver.XML",
+        "lib/net45/MongoDB.Driver.dll"
       ]
     },
     "MongoDB.Driver.Core/2.2.4": {
-      "type": "package",
       "sha512": "gdqzKYas7RMBXt36N8UWTriVitRbX+8Y57yxdNDn6DzXe7aS1tcBofAtBO8FxOtmkGY3fD9CQUbqLLNDuAfjRQ==",
+      "type": "package",
       "files": [
-        "lib/net45/MongoDB.Driver.Core.dll",
         "License.rtf",
         "MongoDB.Driver.Core.2.2.4.nupkg",
         "MongoDB.Driver.Core.2.2.4.nupkg.sha512",
-        "MongoDB.Driver.Core.nuspec"
+        "MongoDB.Driver.Core.nuspec",
+        "lib/net45/MongoDB.Driver.Core.dll"
+      ]
+    },
+    "Polly/4.3.0": {
+      "sha512": "N0rtx8D4WOHTCL85tdXhdjRxj6mlUPFeNcp3ev1h6L4VGIhIY3usjEPhQ4rwkwHgoNjoVNpNhB76o4KV1crJaQ==",
+      "type": "package",
+      "path": "Polly/4.3.0",
+      "files": [
+        "Polly.4.3.0.nupkg.sha512",
+        "Polly.nuspec",
+        "lib/dotnet/Polly.XML",
+        "lib/dotnet/Polly.dll",
+        "lib/dotnet/Polly.pdb",
+        "lib/net35/Polly.XML",
+        "lib/net35/Polly.dll",
+        "lib/net35/Polly.pdb",
+        "lib/net40/Polly.XML",
+        "lib/net40/Polly.dll",
+        "lib/net40/Polly.pdb",
+        "lib/net45/Polly.XML",
+        "lib/net45/Polly.dll",
+        "lib/net45/Polly.pdb",
+        "lib/portable-net45+netcore45+wpa81+wp8/Polly.XML",
+        "lib/portable-net45+netcore45+wpa81+wp8/Polly.dll",
+        "lib/portable-net45+netcore45+wpa81+wp8/Polly.pdb"
       ]
     }
   },
   "projectFileDependencyGroups": {
     "": [
-      "MongoDB.Driver >= 2.2.4"
+      "MongoDB.Driver >= 2.2.4",
+      "Polly >= 4.3.0"
     ],
     ".NETFramework,Version=v4.6": [
-      "fx/System.Configuration >= 4.0.0",
-      "fx/System.Runtime.Serialization >= 4.0.0"
+      "System.Configuration >= 4.0.0",
+      "System.Runtime.Serialization >= 4.0.0"
     ]
-  }
+  },
+  "tools": {},
+  "projectFileToolGroups": {}
 }

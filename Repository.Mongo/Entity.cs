@@ -10,6 +10,11 @@ namespace Repository.Mongo
     [BsonIgnoreExtraElements(Inherited = true)]
     public class Entity : IEntity
     {
+        public Entity()
+        {
+            Id = ObjectId.GenerateNewId().ToString();
+        }
+
         /// <summary>
         /// create date
         /// </summary>
@@ -42,7 +47,7 @@ namespace Repository.Mongo
         {
             get
             {
-                //Incase, this is required before inserted into db
+                //Incase, this is required if db record is null
                 if (Id == null)
                     Id = ObjectId.GenerateNewId().ToString();
                 return ObjectId.Parse(Id);
