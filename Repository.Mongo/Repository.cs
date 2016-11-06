@@ -495,7 +495,7 @@ namespace Repository.Mongo
         {
             return Retry(() =>
             {
-                return Collection.AsQueryable<T>().Any(filter);
+                return First(filter) != null;
             });
         }
 
