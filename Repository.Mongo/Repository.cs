@@ -419,7 +419,7 @@ namespace Repository.Mongo
         /// update an entity with updated fields
         /// </summary>
         /// <param name="id">id</param>
-        /// <param name="update">updated field(s)</param>
+        /// <param name="updates">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public virtual bool Update(string id, params UpdateDefinition<T>[] updates)
         {
@@ -430,7 +430,7 @@ namespace Repository.Mongo
         /// update an entity with updated fields
         /// </summary>
         /// <param name="entity">entity</param>
-        /// <param name="update">updated field(s)</param>
+        /// <param name="updates">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public virtual bool Update(T entity, params UpdateDefinition<T>[] updates)
         {
@@ -454,7 +454,7 @@ namespace Repository.Mongo
         /// update found entities by filter with updated fields
         /// </summary>
         /// <param name="filter">collection filter</param>
-        /// <param name="update">updated field(s)</param>
+        /// <param name="updates">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public bool Update(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates)
         {
@@ -469,7 +469,7 @@ namespace Repository.Mongo
         /// update found entities by filter with updated fields
         /// </summary>
         /// <param name="filter">collection filter</param>
-        /// <param name="update">updated field(s)</param>
+        /// <param name="updates">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public bool Update(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates)
         {
