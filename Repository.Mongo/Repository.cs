@@ -274,7 +274,7 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         public T First(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending)
         {
-            return Find(filter, order, 0, 1, isDescending).SingleOrDefault();
+            return Find(filter, order, 0, 1, isDescending).FirstOrDefault();
         }
 
         #endregion First

@@ -33,7 +33,7 @@ namespace Repository.Mongo
         {
             get
             {
-                if (_createdOn == null)
+                if (_createdOn == null || _createdOn == DateTime.MinValue)
                     _createdOn = ObjectId.CreationTime;
                 return _createdOn;
             }
