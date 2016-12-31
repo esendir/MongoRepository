@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Sockets;
 
 namespace Repository.Mongo
 {
@@ -518,7 +519,8 @@ namespace Repository.Mongo
         protected virtual TResult Retry<TResult>(Func<TResult> action)
         {
             return RetryPolicy
-                .Handle<MongoConnectionException>(i => i.InnerException.GetType() == typeof(IOException))
+                .Handle<MongoConnectionException>(i => i.InnerException.GetType() == typeof(IOException) ||
+                                                       i.InnerException.GetType() == typeof(SocketException))
                 .Retry(3)
                 .Execute(action);
         }
