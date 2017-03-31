@@ -366,6 +366,18 @@ namespace Repository.Mongo
         }
 
         /// <summary>
+        /// insert entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        public virtual Task InsertAsync(T entity)
+        {
+            return Retry(() =>
+            {
+                return Collection.InsertOneAsync(entity);
+            });
+        }
+
+        /// <summary>
         /// insert entity collection
         /// </summary>
         /// <param name="entities">collection of entities</param>
@@ -378,6 +390,17 @@ namespace Repository.Mongo
             });
         }
 
+        /// <summary>
+        /// insert entity collection
+        /// </summary>
+        /// <param name="entities">collection of entities</param>
+        public virtual Task InsertAsync(IEnumerable<T> entities)
+        {
+            return Retry(() =>
+            {
+                return Collection.InsertManyAsync(entities);
+            });
+        }
         #endregion Insert
 
         #region Last

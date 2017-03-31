@@ -211,10 +211,22 @@ namespace Repository.Mongo
         void Insert(T entity);
 
         /// <summary>
+        /// insert entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        Task InsertAsync(T entity);
+
+        /// <summary>
         /// insert entity collection
         /// </summary>
         /// <param name="entities">collection of entities</param>
         void Insert(IEnumerable<T> entities);
+
+        /// <summary>
+        /// insert entity collection
+        /// </summary>
+        /// <param name="entities">collection of entities</param>
+        Task InsertAsync(IEnumerable<T> entities);
 
         #endregion Insert
 
