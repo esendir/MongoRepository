@@ -179,7 +179,7 @@ namespace Repository.Mongo
         {
             return Retry(() =>
             {
-                return Collection.DeleteMany(FilterDefinition<T>.Empty);
+                return Collection.DeleteMany(Filter.Empty);
             });
         }
 
@@ -190,7 +190,7 @@ namespace Repository.Mongo
         {
             return Retry(() =>
             {
-                return Collection.DeleteManyAsync(FilterDefinition<T>.Empty);
+                return Collection.DeleteManyAsync(Filter.Empty);
             });
         }
         #endregion Delete
@@ -646,7 +646,7 @@ namespace Repository.Mongo
         {
             return Retry(() =>
             {
-                return Collection.Count(FilterDefinition<T>.Empty);
+                return Collection.Count(Filter.Empty);
             });
         }
 
@@ -658,7 +658,7 @@ namespace Repository.Mongo
         {
             return Retry(() =>
             {
-                return Collection.CountAsync(FilterDefinition<T>.Empty);
+                return Collection.CountAsync(Filter.Empty);
             });
         }
         #endregion Count
