@@ -1,9 +1,9 @@
 ## MongoRepository
 Repository pattern applied to Mongo C# Driver
 
-#### Usage
+### Usage
 
-##### Model
+#### Model
 You don't need to create a model, but if you are doing so you need to extend Entity
 ```csharp
 	//if you are able to define you model
@@ -14,7 +14,7 @@ You don't need to create a model, but if you are doing so you need to extend Ent
 	}
 ```
 
-##### Repository
+#### Repository
 There are multiple base constructors, read summary for your own usage
 ```csharp
 	public class UserRepository : Repository<User>
