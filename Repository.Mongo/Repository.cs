@@ -240,7 +240,7 @@ namespace Repository.Mongo
         {
             return Retry(() =>
             {
-                return Query().ToList();
+                return Query().ToEnumerable();
             });
         }
 
@@ -281,7 +281,7 @@ namespace Repository.Mongo
             return Retry(() =>
             {
                 var query = Query().Skip(pageIndex * size).Limit(size);
-                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToList();
+                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
             });
         }
 
