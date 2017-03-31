@@ -10,11 +10,6 @@ namespace Repository.Mongo
         {
         }
 
-        internal static IMongoCollection<T> GetCollection()
-        {
-            return GetCollectionFromConnectionString(GetDefaultConnectionString());
-        }
-
         /// <summary>
         /// Creates and returns a MongoCollection from the specified type and connectionstring.
         /// </summary>
@@ -210,17 +205,5 @@ namespace Repository.Mongo
 
         #endregion Connection Name
 
-        #region Connection String
-
-        /// <summary>
-        /// Retrieves the default connectionstring from the App.config or Web.config file.
-        /// </summary>
-        /// <returns>Returns the default connectionstring from the App.config or Web.config file.</returns>
-        internal static string GetDefaultConnectionString()
-        {
-            return ConfigurationManager.ConnectionStrings[GetConnectionName()].ConnectionString;
-        }
-
-        #endregion Connection String
     }
 }
