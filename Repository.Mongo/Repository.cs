@@ -578,7 +578,7 @@ namespace Repository.Mongo
         /// <summary>
         /// validate if filter result exists
         /// </summary>
-        /// <param name="filter"></param>
+        /// <param name="filter">expression filter</param>
         /// <returns>true if exists, otherwise false</returns>
         public bool Any(Expression<Func<T, bool>> filter)
         {
@@ -588,6 +588,55 @@ namespace Repository.Mongo
             });
         }
 
+        /// <summary>
+        /// get number of filtered documents
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>number of documents</returns>
+        public long Count(Expression<Func<T, bool>> filter)
+        {
+            return Retry(() =>
+            {
+                return Collection.Count(filter);
+            });
+        }
+
+        /// <summary>
+        /// get number of filtered documents
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>number of documents</returns>
+        public Task<long> CountAsync(Expression<Func<T, bool>> filter)
+        {
+            return Retry(() =>
+            {
+                return Collection.CountAsync(filter);
+            });
+        }
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        public long Count()
+        {
+            return Retry(() =>
+            {
+                return Collection.Count(FilterDefinition<T>.Empty);
+            });
+        }
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        public Task<long> CountAsync()
+        {
+            return Retry(() =>
+            {
+                return Collection.CountAsync(FilterDefinition<T>.Empty);
+            });
+        }
         #endregion Simplicity
 
         #region RetryPolicy

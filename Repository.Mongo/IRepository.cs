@@ -349,10 +349,35 @@ namespace Repository.Mongo
         /// <summary>
         /// validate if filter result exists
         /// </summary>
-        /// <param name="filter"></param>
+        /// <param name="filter">expression filter</param>
         /// <returns>true if exists, otherwise false</returns>
         bool Any(Expression<Func<T, bool>> filter);
 
+        /// <summary>
+        /// get number of filtered documents
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>number of documents</returns>
+        long Count(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// get number of filtered documents
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>number of documents</returns>
+        Task<long> CountAsync(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        long Count();
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        Task<long> CountAsync();
         #endregion Simplicity
     }
 }
