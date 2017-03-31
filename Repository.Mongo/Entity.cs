@@ -56,4 +56,16 @@ namespace Repository.Mongo
         public ObjectId ObjectId => ObjectId.Parse(Id);
 
     }
+
+    /// <summary>
+    /// Entity wrapper for non-edittable models
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class Entity<T> : Entity
+    {
+        /// <summary>
+        /// Generic content
+        /// </summary>
+        public T Content { get; set; }
+    }
 }
