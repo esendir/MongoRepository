@@ -171,6 +171,28 @@ namespace Repository.Mongo
                 return Collection.DeleteManyAsync(filter);
             });
         }
+
+        /// <summary>
+        /// delete all documents
+        /// </summary>
+        public virtual DeleteResult DeleteAll()
+        {
+            return Retry(() =>
+            {
+                return Collection.DeleteMany(FilterDefinition<T>.Empty);
+            });
+        }
+
+        /// <summary>
+        /// delete all documents
+        /// </summary>
+        public virtual Task<DeleteResult> DeleteAllAsync()
+        {
+            return Retry(() =>
+            {
+                return Collection.DeleteManyAsync(FilterDefinition<T>.Empty);
+            });
+        }
         #endregion Delete
 
         #region Find

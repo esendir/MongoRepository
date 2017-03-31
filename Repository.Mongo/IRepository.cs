@@ -75,6 +75,16 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter">expression filter</param>
         Task<DeleteResult> DeleteAsync(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// delete all documents
+        /// </summary>
+        DeleteResult DeleteAll();
+
+        /// <summary>
+        /// delete all documents
+        /// </summary>
+        Task<DeleteResult> DeleteAllAsync();
         #endregion Delete
 
         #region Find
