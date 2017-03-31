@@ -16,13 +16,8 @@ namespace Repository.Mongo
         /// <param name="value">Name of the collection.</param>
         public ConnectionNameAttribute(string value)
         {
-#if NET35
-            if (string.IsNullOrEmpty(value) || value.Trim().Length == 0)
-#else
             if (string.IsNullOrWhiteSpace(value))
-#endif
-                throw new ArgumentException("Empty connection name is not allowed", "value");
-
+                throw new ArgumentException("Empty connection name is not allowed", nameof(value));
             Name = value;
         }
 
@@ -33,5 +28,3 @@ namespace Repository.Mongo
         public virtual string Name { get; private set; }
     }
 }
-
-

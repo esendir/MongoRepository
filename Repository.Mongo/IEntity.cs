@@ -12,7 +12,6 @@ namespace Repository.Mongo
         /// <summary>
         /// create date
         /// </summary>
-        [BsonIgnore]
         DateTime CreatedOn { get; }
 
         /// <summary>

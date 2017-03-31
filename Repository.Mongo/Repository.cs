@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 using Polly;
 using Polly.Retry;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Sockets;
 
 namespace Repository.Mongo
 {
@@ -19,12 +21,31 @@ namespace Repository.Mongo
         #region MongoSpecific
 
         /// <summary>
-        /// constructor
+        /// where you need to define a connectionString with the name of repository
+        /// </summary>
+        /// <param name="config">config interface to read default settings</param>
+        public Repository(IConfiguration config)
+        {
+            Collection = Database<T>.GetCollection(config);
+        }
+
+        /// <summary>
+        /// where collection name will be name of the repository
         /// </summary>
         /// <param name="connectionString">connection string</param>
         public Repository(string connectionString)
         {
             Collection = Database<T>.GetCollectionFromConnectionString(connectionString);
+        }
+
+        /// <summary>
+        /// with custom settings
+        /// </summary>
+        /// <param name="connectionString">connection string</param>
+        /// <param name="collectionName">collection name</param>
+        public Repository(string connectionString, string collectionName)
+        {
+            Collection = Database<T>.GetCollectionFromConnectionString(connectionString, collectionName);
         }
 
         /// <summary>
@@ -274,7 +295,7 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         public T First(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending)
         {
-            return Find(filter, order, 0, 1, isDescending).SingleOrDefault();
+            return Find(filter, order, 0, 1, isDescending).FirstOrDefault();
         }
 
         #endregion First
@@ -419,7 +440,7 @@ namespace Repository.Mongo
         /// update an entity with updated fields
         /// </summary>
         /// <param name="id">id</param>
-        /// <param name="update">updated field(s)</param>
+        /// <param name="updates">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public virtual bool Update(string id, params UpdateDefinition<T>[] updates)
         {
@@ -430,7 +451,7 @@ namespace Repository.Mongo
         /// update an entity with updated fields
         /// </summary>
         /// <param name="entity">entity</param>
-        /// <param name="update">updated field(s)</param>
+        /// <param name="updates">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public virtual bool Update(T entity, params UpdateDefinition<T>[] updates)
         {
@@ -454,7 +475,7 @@ namespace Repository.Mongo
         /// update found entities by filter with updated fields
         /// </summary>
         /// <param name="filter">collection filter</param>
-        /// <param name="update">updated field(s)</param>
+        /// <param name="updates">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public bool Update(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates)
         {
@@ -469,7 +490,7 @@ namespace Repository.Mongo
         /// update found entities by filter with updated fields
         /// </summary>
         /// <param name="filter">collection filter</param>
-        /// <param name="update">updated field(s)</param>
+        /// <param name="updates">updated field(s)</param>
         /// <returns>true if successful, otherwise false</returns>
         public bool Update(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates)
         {
@@ -495,7 +516,7 @@ namespace Repository.Mongo
         {
             return Retry(() =>
             {
-                return Collection.AsQueryable<T>().Any(filter);
+                return First(filter) != null;
             });
         }
 
@@ -518,7 +539,8 @@ namespace Repository.Mongo
         protected virtual TResult Retry<TResult>(Func<TResult> action)
         {
             return RetryPolicy
-                .Handle<MongoConnectionException>(i => i.InnerException.GetType() == typeof(IOException))
+                .Handle<MongoConnectionException>(i => i.InnerException.GetType() == typeof(IOException) ||
+                                                       i.InnerException.GetType() == typeof(SocketException))
                 .Retry(3)
                 .Execute(action);
         }

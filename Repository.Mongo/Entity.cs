@@ -5,25 +5,28 @@ using System;
 namespace Repository.Mongo
 {
     /// <summary>
+    /// Entity wrapper for non-edittable models
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class Entity<T> : Entity
+    {
+        /// <summary>
+        /// Generic content
+        /// </summary>
+        public T Content { get; set; }
+    }
+
+    /// <summary>
     /// mongo entity
     /// </summary>
     [BsonIgnoreExtraElements(Inherited = true)]
     public class Entity : IEntity
     {
+        private DateTime _createdOn;
+
         public Entity()
         {
             Id = ObjectId.GenerateNewId().ToString();
-        }
-
-        /// <summary>
-        /// create date
-        /// </summary>
-        public DateTime CreatedOn
-        {
-            get
-            {
-                return ObjectId.CreationTime;
-            }
         }
 
         /// <summary>
@@ -33,25 +36,36 @@ namespace Repository.Mongo
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+
+        /// <summary>
+        /// create date
+        /// </summary>
+        [BsonElement("_c", Order = 1)]
+        public DateTime CreatedOn
+        {
+            get
+            {
+                if (_createdOn == null || _createdOn == DateTime.MinValue)
+                    _createdOn = ObjectId.CreationTime;
+                return _createdOn;
+            }
+            set
+            {
+                _createdOn = value;
+            }
+        }
+
         /// <summary>
         /// modify date
         /// </summary>
-        [BsonElement("_m", Order = 1)]
+        [BsonElement("_m", Order = 2)]
         [BsonRepresentation(BsonType.DateTime)]
         public DateTime ModifiedOn { get; set; }
 
         /// <summary>
         /// id in objectId format
         /// </summary>
-        public ObjectId ObjectId
-        {
-            get
-            {
-                //Incase, this is required if db record is null
-                if (Id == null)
-                    Id = ObjectId.GenerateNewId().ToString();
-                return ObjectId.Parse(Id);
-            }
-        }
+        public ObjectId ObjectId => ObjectId.Parse(Id);
+
     }
 }

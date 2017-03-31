@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using System;
-using System.Configuration;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Repository.Mongo
 {
@@ -10,9 +11,14 @@ namespace Repository.Mongo
         {
         }
 
-        internal static IMongoCollection<T> GetCollection()
+        /// <summary>
+        /// Creates and returns a MongoCollection from specified type
+        /// </summary>
+        /// <param name="config">Configuration interface</param>
+        /// <returns></returns>
+        internal static IMongoCollection<T> GetCollection(IConfiguration config)
         {
-            return GetCollectionFromConnectionString(GetDefaultConnectionString());
+            return GetCollectionFromConnectionString(GetDefaultConnectionString(config));
         }
 
         /// <summary>
@@ -27,7 +33,7 @@ namespace Repository.Mongo
         }
 
         /// <summary>
-        /// Creates and returns a MongoCollection from the specified type and connectionstring.
+        /// Creates and returns a MongoCollection from the connectionstring name and collection name
         /// </summary>
         /// <typeparam name="T">The type to get the collection of.</typeparam>
         /// <param name="connectionString">The connectionstring to use to get the collection from.</param>
@@ -82,7 +88,7 @@ namespace Repository.Mongo
         private static string GetCollectionName()
         {
             string collectionName;
-            collectionName = typeof(T).BaseType.Equals(typeof(object)) ?
+            collectionName = typeof(T).GetTypeInfo().BaseType.Equals(typeof(object)) ?
                                       GetCollectionNameFromInterface() :
                                       GetCollectionNameFromType();
 
@@ -101,9 +107,9 @@ namespace Repository.Mongo
         private static string GetCollectionNameFromInterface()
         {
             // Check to see if the object (inherited from Entity) has a CollectionName attribute
-            var att = Attribute.GetCustomAttribute(typeof(T), typeof(CollectionNameAttribute));
+            var att = CustomAttributeExtensions.GetCustomAttribute<CollectionNameAttribute>(typeof(T).GetTypeInfo().Assembly);
 
-            return att != null ? ((CollectionNameAttribute)att).Name : typeof(T).Name;
+            return att?.Name ?? typeof(T).Name;
         }
 
         /// <summary>
@@ -117,22 +123,14 @@ namespace Repository.Mongo
             string collectionname;
 
             // Check to see if the object (inherited from Entity) has a CollectionName attribute
-            var att = Attribute.GetCustomAttribute(entitytype, typeof(CollectionNameAttribute));
+            var att = CustomAttributeExtensions.GetCustomAttribute<CollectionNameAttribute>(typeof(T).GetTypeInfo().Assembly);
             if (att != null)
             {
                 // It does! Return the value specified by the CollectionName attribute
-                collectionname = ((CollectionNameAttribute)att).Name;
+                collectionname = att.Name;
             }
             else
             {
-                //if (typeof(Entity).IsAssignableFrom(entitytype))
-                //{
-                //    // No attribute found, get the basetype
-                //    while (!entitytype.BaseType.Equals(typeof(Entity)))
-                //    {
-                //        entitytype = entitytype.BaseType;
-                //    }
-                //}
                 collectionname = entitytype.Name;
             }
 
@@ -150,16 +148,16 @@ namespace Repository.Mongo
         /// <returns>Returns the connection name for T.</returns>
         private static string GetConnectionName()
         {
-            string collectionName;
-            collectionName = typeof(T).BaseType.Equals(typeof(object)) ?
+            string connectionName;
+            connectionName = typeof(T).GetTypeInfo().BaseType.Equals(typeof(object)) ?
                                       GetConnectionNameFromInterface() :
                                       GetConnectionNameFromType();
 
-            if (string.IsNullOrEmpty(collectionName))
+            if (string.IsNullOrEmpty(connectionName))
             {
-                collectionName = typeof(T).Name;
+                connectionName = typeof(T).Name;
             }
-            return collectionName.ToLowerInvariant();
+            return connectionName.ToLowerInvariant();
         }
 
         /// <summary>
@@ -170,9 +168,8 @@ namespace Repository.Mongo
         private static string GetConnectionNameFromInterface()
         {
             // Check to see if the object (inherited from Entity) has a ConnectionName attribute
-            var att = Attribute.GetCustomAttribute(typeof(T), typeof(ConnectionNameAttribute));
-
-            return (att != null) ? ((ConnectionNameAttribute)att).Name : typeof(T).Name;
+            var att = CustomAttributeExtensions.GetCustomAttribute<ConnectionNameAttribute>(typeof(T).GetTypeInfo().Assembly);
+            return att?.Name ?? typeof(T).Name;
         }
 
         /// <summary>
@@ -186,20 +183,20 @@ namespace Repository.Mongo
             string collectionname;
 
             // Check to see if the object (inherited from Entity) has a ConnectionName attribute
-            var att = Attribute.GetCustomAttribute(entitytype, typeof(ConnectionNameAttribute));
+            var att = CustomAttributeExtensions.GetCustomAttribute<ConnectionNameAttribute>(typeof(T).GetTypeInfo().Assembly);
             if (att != null)
             {
                 // It does! Return the value specified by the ConnectionName attribute
-                collectionname = ((ConnectionNameAttribute)att).Name;
+                collectionname = att.Name;
             }
             else
             {
-                if (typeof(Entity).IsAssignableFrom(entitytype))
+                if (typeof(Entity).GetTypeInfo().IsAssignableFrom(entitytype))
                 {
                     // No attribute found, get the basetype
-                    while (!entitytype.BaseType.Equals(typeof(Entity)))
+                    while (!entitytype.GetTypeInfo().BaseType.Equals(typeof(Entity)))
                     {
-                        entitytype = entitytype.BaseType;
+                        entitytype = entitytype.GetTypeInfo().BaseType;
                     }
                 }
                 collectionname = entitytype.Name;
@@ -216,9 +213,9 @@ namespace Repository.Mongo
         /// Retrieves the default connectionstring from the App.config or Web.config file.
         /// </summary>
         /// <returns>Returns the default connectionstring from the App.config or Web.config file.</returns>
-        internal static string GetDefaultConnectionString()
+        internal static string GetDefaultConnectionString(IConfiguration config)
         {
-            return ConfigurationManager.ConnectionStrings[GetConnectionName()].ConnectionString;
+            return ConfigurationExtensions.GetConnectionString(config, GetConnectionName());
         }
 
         #endregion Connection String
