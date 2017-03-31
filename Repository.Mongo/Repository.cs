@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Repository.Mongo
 {
@@ -108,20 +109,41 @@ namespace Repository.Mongo
         /// delete entity
         /// </summary>
         /// <param name="entity">entity</param>
-        public void Delete(T entity)
+        public DeleteResult Delete(T entity)
         {
-            Delete(entity.Id);
+            return Delete(entity.Id);
+        }
+
+        /// <summary>
+        /// delete entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        public Task<DeleteResult> DeleteAsync(T entity)
+        {
+            return DeleteAsync(entity.Id);
         }
 
         /// <summary>
         /// delete by id
         /// </summary>
         /// <param name="id">id</param>
-        public virtual void Delete(string id)
+        public virtual DeleteResult Delete(string id)
         {
-            Retry(() =>
+            return Retry(() =>
             {
                 return Collection.DeleteOne(i => i.Id == id);
+            });
+        }
+
+        /// <summary>
+        /// delete by id
+        /// </summary>
+        /// <param name="id">id</param>
+        public virtual Task<DeleteResult> DeleteAsync(string id)
+        {
+            return Retry(() =>
+            {
+                return Collection.DeleteOneAsync(i => i.Id == id);
             });
         }
 
@@ -129,14 +151,25 @@ namespace Repository.Mongo
         /// delete items with filter
         /// </summary>
         /// <param name="filter">expression filter</param>
-        public void Delete(Expression<Func<T, bool>> filter)
+        public DeleteResult Delete(Expression<Func<T, bool>> filter)
         {
-            Retry(() =>
+            return Retry(() =>
             {
                 return Collection.DeleteMany(filter);
             });
         }
 
+        /// <summary>
+        /// delete items with filter
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        public Task<DeleteResult> DeleteAsync(Expression<Func<T, bool>> filter)
+        {
+            return Retry(() =>
+            {
+                return Collection.DeleteManyAsync(filter);
+            });
+        }
         #endregion Delete
 
         #region Find

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Repository.Mongo
 {
@@ -43,20 +44,37 @@ namespace Repository.Mongo
         /// delete by id
         /// </summary>
         /// <param name="id">id</param>
-        void Delete(string id);
+        DeleteResult Delete(string id);
+
+        /// <summary>
+        /// delete by id
+        /// </summary>
+        /// <param name="id">id</param>
+        Task<DeleteResult> DeleteAsync(string id);
 
         /// <summary>
         /// delete entity
         /// </summary>
         /// <param name="entity">entity</param>
-        void Delete(T entity);
+        DeleteResult Delete(T entity);
+
+        /// <summary>
+        /// delete entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        Task<DeleteResult> DeleteAsync(T entity);
 
         /// <summary>
         /// delete items with filter
         /// </summary>
         /// <param name="filter">expression filter</param>
-        void Delete(Expression<Func<T, bool>> filter);
+        DeleteResult Delete(Expression<Func<T, bool>> filter);
 
+        /// <summary>
+        /// delete items with filter
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        Task<DeleteResult> DeleteAsync(Expression<Func<T, bool>> filter);
         #endregion Delete
 
         #region Find
