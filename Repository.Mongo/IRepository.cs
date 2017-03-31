@@ -344,7 +344,7 @@ namespace Repository.Mongo
 
         #endregion CRUD
 
-        #region Simplicity
+        #region Utils
 
         /// <summary>
         /// validate if filter result exists
@@ -353,6 +353,7 @@ namespace Repository.Mongo
         /// <returns>true if exists, otherwise false</returns>
         bool Any(Expression<Func<T, bool>> filter);
 
+        #region Count
         /// <summary>
         /// get number of filtered documents
         /// </summary>
@@ -378,6 +379,27 @@ namespace Repository.Mongo
         /// </summary>
         /// <returns>number of documents</returns>
         Task<long> CountAsync();
-        #endregion Simplicity
+        #endregion Count
+
+        #region Indexes
+
+        /// <summary>
+        /// Create index for the collection
+        /// </summary>
+        /// <param name="keys">index definition</param>
+        /// <param name="options">options</param>
+        /// <returns>name of the index</returns>
+        string CreateIndex(IndexKeysDefinition<T> keys, CreateIndexOptions options = null);
+
+        /// <summary>
+        /// Create multiple index for the collection
+        /// </summary>
+        /// <param name="models">index definition</param>
+        /// <returns>names of the indexes</returns>
+        IEnumerable<string> CreateIndex(IEnumerable<CreateIndexModel<T>> models);
+
+        #endregion Indexes
+
+        #endregion Utils
     }
 }

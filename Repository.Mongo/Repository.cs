@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Repository.Mongo
@@ -573,7 +574,7 @@ namespace Repository.Mongo
 
         #endregion CRUD
 
-        #region Simplicity
+        #region Utils
 
         /// <summary>
         /// validate if filter result exists
@@ -588,6 +589,7 @@ namespace Repository.Mongo
             });
         }
 
+        #region Count
         /// <summary>
         /// get number of filtered documents
         /// </summary>
@@ -637,7 +639,40 @@ namespace Repository.Mongo
                 return Collection.CountAsync(FilterDefinition<T>.Empty);
             });
         }
-        #endregion Simplicity
+        #endregion Count
+
+        #region Indexes
+
+        /// <summary>
+        /// Create index for the collection
+        /// </summary>
+        /// <param name="keys">index definition</param>
+        /// <param name="options">options</param>
+        /// <returns>name of the index</returns>
+        public virtual string CreateIndex(IndexKeysDefinition<T> keys, CreateIndexOptions options = null)
+        {
+            return Retry(() =>
+            {
+                return Collection.Indexes.CreateOne(keys, options);
+            });
+        }
+
+        /// <summary>
+        /// Create multiple index for the collection
+        /// </summary>
+        /// <param name="models">index definition</param>
+        /// <returns>names of the indexes</returns>
+        public virtual IEnumerable<string> CreateIndex(IEnumerable<CreateIndexModel<T>> models)
+        {
+            return Retry(() =>
+            {
+                return Collection.Indexes.CreateMany(models);
+            });
+        }
+
+        #endregion Indexes
+
+        #endregion Utils
 
         #region RetryPolicy
         /// <summary>
