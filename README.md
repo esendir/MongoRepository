@@ -1,5 +1,5 @@
 ## MongoRepository
-Repository pattern applied to Mongo C# Driver
+Repository pattern for MongoDB with extended features
 
 ### Definition
 
@@ -15,7 +15,7 @@ You don't need to create a model, but if you are doing so you need to extend Ent
 ```
 
 #### Repository
-There are multiple base constructors, read summary for other overloads
+There are multiple base constructors, read summaries of others
 ```csharp
 	public class UserRepository : Repository<User>
 	{
@@ -25,6 +25,12 @@ There are multiple base constructors, read summary for other overloads
 		public User FindbyUsername(string username)
 		{
 			return First(i => i.Username == username);
+		}
+		
+		//custom method2
+		public void UpdatePassword(User item, string newPassword)
+		{
+			repo.Update(item, i => i.Password, newPassword);
 		}
 	}
 ```
@@ -45,7 +51,7 @@ There are multiple base constructors, read summary for other overloads
 
 ### Usage
 
-Each method has multiple overloads, read summaries additional parameters
+Each method has multiple overloads, read method summary for additional parameters
 
 ```csharp
 	UserRepository repo = new UserRepository("mongodb://localhost/sample")
