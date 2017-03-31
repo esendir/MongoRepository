@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Repository.Mongo
 {
@@ -43,20 +44,47 @@ namespace Repository.Mongo
         /// delete by id
         /// </summary>
         /// <param name="id">id</param>
-        void Delete(string id);
+        DeleteResult Delete(string id);
+
+        /// <summary>
+        /// delete by id
+        /// </summary>
+        /// <param name="id">id</param>
+        Task<DeleteResult> DeleteAsync(string id);
 
         /// <summary>
         /// delete entity
         /// </summary>
         /// <param name="entity">entity</param>
-        void Delete(T entity);
+        DeleteResult Delete(T entity);
+
+        /// <summary>
+        /// delete entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        Task<DeleteResult> DeleteAsync(T entity);
 
         /// <summary>
         /// delete items with filter
         /// </summary>
         /// <param name="filter">expression filter</param>
-        void Delete(Expression<Func<T, bool>> filter);
+        DeleteResult Delete(Expression<Func<T, bool>> filter);
 
+        /// <summary>
+        /// delete items with filter
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        Task<DeleteResult> DeleteAsync(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// delete all documents
+        /// </summary>
+        DeleteResult DeleteAll();
+
+        /// <summary>
+        /// delete all documents
+        /// </summary>
+        Task<DeleteResult> DeleteAllAsync();
         #endregion Delete
 
         #region Find
@@ -193,10 +221,22 @@ namespace Repository.Mongo
         void Insert(T entity);
 
         /// <summary>
+        /// insert entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        Task InsertAsync(T entity);
+
+        /// <summary>
         /// insert entity collection
         /// </summary>
         /// <param name="entities">collection of entities</param>
         void Insert(IEnumerable<T> entities);
+
+        /// <summary>
+        /// insert entity collection
+        /// </summary>
+        /// <param name="entities">collection of entities</param>
+        Task InsertAsync(IEnumerable<T> entities);
 
         #endregion Insert
 
@@ -240,7 +280,13 @@ namespace Repository.Mongo
         /// replace an existing entity
         /// </summary>
         /// <param name="entity">entity</param>
-        void Replace(T entity);
+        ReplaceOneResult Replace(T entity);
+
+        /// <summary>
+        /// replace an existing entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        Task<ReplaceOneResult> ReplaceAsync(T entity);
 
         /// <summary>
         /// replace collection of entities
@@ -304,19 +350,111 @@ namespace Repository.Mongo
         /// <returns>true if successful, otherwise false</returns>
         bool Update<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value);
 
+        /// <summary>
+        /// update a property field in an entity
+        /// </summary>
+        /// <typeparam name="TField">field type</typeparam>
+        /// <param name="entity">entity</param>
+        /// <param name="field">field</param>
+        /// <param name="value">new value</param>
+        Task<UpdateResult> UpdateAsync<TField>(T entity, Expression<Func<T, TField>> field, TField value);
+
+        /// <summary>
+        /// update an entity with updated fields
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <param name="updates">updated field(s)</param>
+        Task<UpdateResult> UpdateAsync(string id, params UpdateDefinition<T>[] updates);
+
+        /// <summary>
+        /// update an entity with updated fields
+        /// </summary>
+        /// <param name="entity">entity</param>
+        /// <param name="updates">updated field(s)</param>
+        Task<UpdateResult> UpdateAsync(T entity, params UpdateDefinition<T>[] updates);
+
+        /// <summary>
+        /// update a property field in entities
+        /// </summary>
+        /// <typeparam name="TField">field type</typeparam>
+        /// <param name="filter">filter</param>
+        /// <param name="field">field</param>
+        /// <param name="value">new value</param>
+        Task<UpdateResult> UpdateAsync<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value);
+
+        /// <summary>
+        /// update found entities by filter with updated fields
+        /// </summary>
+        /// <param name="filter">collection filter</param>
+        /// <param name="updates">updated field(s)</param>
+        Task<UpdateResult> UpdateAsync(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates);
+
+        /// <summary>
+        /// update found entities by filter with updated fields
+        /// </summary>
+        /// <param name="filter">collection filter</param>
+        /// <param name="updates">updated field(s)</param>
+        Task<UpdateResult> UpdateAsync(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates);
         #endregion Update
 
         #endregion CRUD
 
-        #region Simplicity
+        #region Utils
 
         /// <summary>
         /// validate if filter result exists
         /// </summary>
-        /// <param name="filter"></param>
+        /// <param name="filter">expression filter</param>
         /// <returns>true if exists, otherwise false</returns>
         bool Any(Expression<Func<T, bool>> filter);
 
-        #endregion Simplicity
+        #region Count
+        /// <summary>
+        /// get number of filtered documents
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>number of documents</returns>
+        long Count(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// get number of filtered documents
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>number of documents</returns>
+        Task<long> CountAsync(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        long Count();
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        Task<long> CountAsync();
+        #endregion Count
+
+        #region Indexes
+
+        /// <summary>
+        /// Create index for the collection
+        /// </summary>
+        /// <param name="keys">index definition</param>
+        /// <param name="options">options</param>
+        /// <returns>name of the index</returns>
+        string CreateIndex(IndexKeysDefinition<T> keys, CreateIndexOptions options = null);
+
+        /// <summary>
+        /// Create multiple index for the collection
+        /// </summary>
+        /// <param name="models">index definition</param>
+        /// <returns>names of the indexes</returns>
+        IEnumerable<string> CreateIndex(IEnumerable<CreateIndexModel<T>> models);
+
+        #endregion Indexes
+
+        #endregion Utils
     }
 }
