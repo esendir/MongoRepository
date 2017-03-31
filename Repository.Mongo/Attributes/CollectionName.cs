@@ -17,7 +17,7 @@ namespace Repository.Mongo
         public CollectionNameAttribute(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Empty collection name is not allowed", "value");
+                throw new ArgumentException("Empty collection name is not allowed", nameof(value));
             Name = value;
         }
 

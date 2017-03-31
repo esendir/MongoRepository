@@ -17,7 +17,7 @@ namespace Repository.Mongo
         public ConnectionNameAttribute(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Empty connection name is not allowed", "value");
+                throw new ArgumentException("Empty connection name is not allowed", nameof(value));
             Name = value;
         }
 
@@ -28,5 +28,3 @@ namespace Repository.Mongo
         public virtual string Name { get; private set; }
     }
 }
-
-

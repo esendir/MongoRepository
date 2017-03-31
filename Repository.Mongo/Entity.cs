@@ -5,6 +5,18 @@ using System;
 namespace Repository.Mongo
 {
     /// <summary>
+    /// Entity wrapper for non-edittable models
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class Entity<T> : Entity
+    {
+        /// <summary>
+        /// Generic content
+        /// </summary>
+        public T Content { get; set; }
+    }
+
+    /// <summary>
     /// mongo entity
     /// </summary>
     [BsonIgnoreExtraElements(Inherited = true)]
@@ -55,17 +67,5 @@ namespace Repository.Mongo
         /// </summary>
         public ObjectId ObjectId => ObjectId.Parse(Id);
 
-    }
-
-    /// <summary>
-    /// Entity wrapper for non-edittable models
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class Entity<T> : Entity
-    {
-        /// <summary>
-        /// Generic content
-        /// </summary>
-        public T Content { get; set; }
     }
 }

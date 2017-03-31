@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 using Polly;
 using Polly.Retry;
 using System;
@@ -20,12 +21,31 @@ namespace Repository.Mongo
         #region MongoSpecific
 
         /// <summary>
-        /// constructor
+        /// where you need to define a connectionString with the name of repository
+        /// </summary>
+        /// <param name="config">config interface to read default settings</param>
+        public Repository(IConfiguration config)
+        {
+            Collection = Database<T>.GetCollection(config);
+        }
+
+        /// <summary>
+        /// where collection name will be name of the repository
         /// </summary>
         /// <param name="connectionString">connection string</param>
         public Repository(string connectionString)
         {
             Collection = Database<T>.GetCollectionFromConnectionString(connectionString);
+        }
+
+        /// <summary>
+        /// with custom settings
+        /// </summary>
+        /// <param name="connectionString">connection string</param>
+        /// <param name="collectionName">collection name</param>
+        public Repository(string connectionString, string collectionName)
+        {
+            Collection = Database<T>.GetCollectionFromConnectionString(connectionString, collectionName);
         }
 
         /// <summary>
