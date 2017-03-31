@@ -19,9 +19,8 @@ There are multiple base constructors, read summary for your own usage
 ```csharp
 	public class UserRepository : Repository<User>
 	{
-	    public UserRepository(string connectionString) : base(connectionString)
-	    { }
-	    
+		public UserRepository(string connectionString) : base(connectionString) {}
+
 		//custom method
 		public User FindbyUsername(string username)
 		{
@@ -34,9 +33,8 @@ There are multiple base constructors, read summary for your own usage
 ```csharp
 	public class UserRepository : Repository<Entity<User>>
 	{
-	    public UserRepository(string connectionString) : base(connectionString)
-	    { }
-	    
+		public UserRepository(string connectionString) : base(connectionString) {}
+
 		//custom method
 		public User FindbyUsername(string username)
 		{
