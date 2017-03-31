@@ -455,11 +455,23 @@ namespace Repository.Mongo
         /// replace an existing entity
         /// </summary>
         /// <param name="entity">entity</param>
-        public virtual void Replace(T entity)
+        public virtual ReplaceOneResult Replace(T entity)
         {
-            Retry(() =>
+            return Retry(() =>
             {
                 return Collection.ReplaceOne(i => i.Id == entity.Id, entity);
+            });
+        }
+
+        /// <summary>
+        /// replace an existing entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        public virtual Task<ReplaceOneResult> ReplaceAsync(T entity)
+        {
+            return Retry(() =>
+            {
+                return Collection.ReplaceOneAsync(i => i.Id == entity.Id, entity);
             });
         }
 

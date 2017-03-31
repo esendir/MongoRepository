@@ -270,7 +270,13 @@ namespace Repository.Mongo
         /// replace an existing entity
         /// </summary>
         /// <param name="entity">entity</param>
-        void Replace(T entity);
+        ReplaceOneResult Replace(T entity);
+
+        /// <summary>
+        /// replace an existing entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        Task<ReplaceOneResult> ReplaceAsync(T entity);
 
         /// <summary>
         /// replace collection of entities
