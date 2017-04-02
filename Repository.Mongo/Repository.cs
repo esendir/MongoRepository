@@ -766,37 +766,6 @@ namespace Repository.Mongo
         }
         #endregion Count
 
-        #region Indexes
-
-        /// <summary>
-        /// Create index for the collection
-        /// </summary>
-        /// <param name="keys">index definition</param>
-        /// <param name="options">options</param>
-        /// <returns>name of the index</returns>
-        public virtual string CreateIndex(IndexKeysDefinition<T> keys, CreateIndexOptions options = null)
-        {
-            return Retry(() =>
-            {
-                return Collection.Indexes.CreateOne(keys, options);
-            });
-        }
-
-        /// <summary>
-        /// Create multiple index for the collection
-        /// </summary>
-        /// <param name="models">index definition</param>
-        /// <returns>names of the indexes</returns>
-        public virtual IEnumerable<string> CreateIndex(IEnumerable<CreateIndexModel<T>> models)
-        {
-            return Retry(() =>
-            {
-                return Collection.Indexes.CreateMany(models);
-            });
-        }
-
-        #endregion Indexes
-
         #endregion Utils
 
         #region RetryPolicy

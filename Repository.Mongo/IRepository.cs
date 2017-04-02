@@ -401,7 +401,6 @@ namespace Repository.Mongo
         #endregion CRUD
 
         #region Utils
-
         /// <summary>
         /// validate if filter result exists
         /// </summary>
@@ -436,25 +435,6 @@ namespace Repository.Mongo
         /// <returns>number of documents</returns>
         Task<long> CountAsync();
         #endregion Count
-
-        #region Indexes
-
-        /// <summary>
-        /// Create index for the collection
-        /// </summary>
-        /// <param name="keys">index definition</param>
-        /// <param name="options">options</param>
-        /// <returns>name of the index</returns>
-        string CreateIndex(IndexKeysDefinition<T> keys, CreateIndexOptions options = null);
-
-        /// <summary>
-        /// Create multiple index for the collection
-        /// </summary>
-        /// <param name="models">index definition</param>
-        /// <returns>names of the indexes</returns>
-        IEnumerable<string> CreateIndex(IEnumerable<CreateIndexModel<T>> models);
-
-        #endregion Indexes
 
         #endregion Utils
     }
