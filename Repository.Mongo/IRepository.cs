@@ -44,47 +44,48 @@ namespace Repository.Mongo
         /// delete by id
         /// </summary>
         /// <param name="id">id</param>
-        DeleteResult Delete(string id);
+        bool Delete(string id);
+
+
+        /// <summary>
+        /// delete entity
+        /// </summary>
+        /// <param name="entity">entity</param>
+        bool Delete(T entity);
+
+        /// <summary>
+        /// delete items with filter
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        bool Delete(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// delete all documents
+        /// </summary>
+        bool DeleteAll();
 
         /// <summary>
         /// delete by id
         /// </summary>
         /// <param name="id">id</param>
-        Task<DeleteResult> DeleteAsync(string id);
+        Task<bool> DeleteAsync(string id);
 
         /// <summary>
         /// delete entity
         /// </summary>
         /// <param name="entity">entity</param>
-        DeleteResult Delete(T entity);
-
-        /// <summary>
-        /// delete entity
-        /// </summary>
-        /// <param name="entity">entity</param>
-        Task<DeleteResult> DeleteAsync(T entity);
+        Task<bool> DeleteAsync(T entity);
 
         /// <summary>
         /// delete items with filter
         /// </summary>
         /// <param name="filter">expression filter</param>
-        DeleteResult Delete(Expression<Func<T, bool>> filter);
-
-        /// <summary>
-        /// delete items with filter
-        /// </summary>
-        /// <param name="filter">expression filter</param>
-        Task<DeleteResult> DeleteAsync(Expression<Func<T, bool>> filter);
+        Task<bool> DeleteAsync(Expression<Func<T, bool>> filter);
 
         /// <summary>
         /// delete all documents
         /// </summary>
-        DeleteResult DeleteAll();
-
-        /// <summary>
-        /// delete all documents
-        /// </summary>
-        Task<DeleteResult> DeleteAllAsync();
+        Task<bool> DeleteAllAsync();
         #endregion Delete
 
         #region Find
@@ -280,13 +281,13 @@ namespace Repository.Mongo
         /// replace an existing entity
         /// </summary>
         /// <param name="entity">entity</param>
-        ReplaceOneResult Replace(T entity);
+        bool Replace(T entity);
 
         /// <summary>
         /// replace an existing entity
         /// </summary>
         /// <param name="entity">entity</param>
-        Task<ReplaceOneResult> ReplaceAsync(T entity);
+        Task<bool> ReplaceAsync(T entity);
 
         /// <summary>
         /// replace collection of entities
@@ -357,21 +358,21 @@ namespace Repository.Mongo
         /// <param name="entity">entity</param>
         /// <param name="field">field</param>
         /// <param name="value">new value</param>
-        Task<UpdateResult> UpdateAsync<TField>(T entity, Expression<Func<T, TField>> field, TField value);
+        Task<bool> UpdateAsync<TField>(T entity, Expression<Func<T, TField>> field, TField value);
 
         /// <summary>
         /// update an entity with updated fields
         /// </summary>
         /// <param name="id">id</param>
         /// <param name="updates">updated field(s)</param>
-        Task<UpdateResult> UpdateAsync(string id, params UpdateDefinition<T>[] updates);
+        Task<bool> UpdateAsync(string id, params UpdateDefinition<T>[] updates);
 
         /// <summary>
         /// update an entity with updated fields
         /// </summary>
         /// <param name="entity">entity</param>
         /// <param name="updates">updated field(s)</param>
-        Task<UpdateResult> UpdateAsync(T entity, params UpdateDefinition<T>[] updates);
+        Task<bool> UpdateAsync(T entity, params UpdateDefinition<T>[] updates);
 
         /// <summary>
         /// update a property field in entities
@@ -380,21 +381,21 @@ namespace Repository.Mongo
         /// <param name="filter">filter</param>
         /// <param name="field">field</param>
         /// <param name="value">new value</param>
-        Task<UpdateResult> UpdateAsync<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value);
+        Task<bool> UpdateAsync<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value);
 
         /// <summary>
         /// update found entities by filter with updated fields
         /// </summary>
         /// <param name="filter">collection filter</param>
         /// <param name="updates">updated field(s)</param>
-        Task<UpdateResult> UpdateAsync(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates);
+        Task<bool> UpdateAsync(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates);
 
         /// <summary>
         /// update found entities by filter with updated fields
         /// </summary>
         /// <param name="filter">collection filter</param>
         /// <param name="updates">updated field(s)</param>
-        Task<UpdateResult> UpdateAsync(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates);
+        Task<bool> UpdateAsync(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates);
         #endregion Update
 
         #endregion CRUD
