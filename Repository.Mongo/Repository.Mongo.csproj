@@ -4,7 +4,7 @@
     <Description>Repository pattern for MongoDB</Description>
     <AssemblyTitle>Repository.Mongo</AssemblyTitle>
     <VersionPrefix>2.0.0</VersionPrefix>
-    <Authors>UsameEsendir</Authors>
+    <Authors>Usame Esendir</Authors>
     <TargetFramework>netstandard1.5</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Repository.Mongo</AssemblyName>
@@ -21,6 +21,8 @@
     <Version>2.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <RepositoryUrl></RepositoryUrl>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
