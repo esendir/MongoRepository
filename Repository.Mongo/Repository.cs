@@ -110,7 +110,7 @@ namespace Repository.Mongo
         /// delete entity
         /// </summary>
         /// <param name="entity">entity</param>
-        public DeleteResult Delete(T entity)
+        public bool Delete(T entity)
         {
             return Delete(entity.Id);
         }
@@ -119,20 +119,11 @@ namespace Repository.Mongo
         /// delete entity
         /// </summary>
         /// <param name="entity">entity</param>
-        public Task<DeleteResult> DeleteAsync(T entity)
+        public Task<bool> DeleteAsync(T entity)
         {
-            return DeleteAsync(entity.Id);
-        }
-
-        /// <summary>
-        /// delete by id
-        /// </summary>
-        /// <param name="id">id</param>
-        public virtual DeleteResult Delete(string id)
-        {
-            return Retry(() =>
+            return Task.Run(() =>
             {
-                return Collection.DeleteOne(i => i.Id == id);
+                return Delete(entity);
             });
         }
 
@@ -140,11 +131,26 @@ namespace Repository.Mongo
         /// delete by id
         /// </summary>
         /// <param name="id">id</param>
-        public virtual Task<DeleteResult> DeleteAsync(string id)
+        public virtual bool Delete(string id)
         {
             return Retry(() =>
             {
-                return Collection.DeleteOneAsync(i => i.Id == id);
+                return Collection.DeleteOne(i => i.Id == id).IsAcknowledged;
+            });
+        }
+
+        /// <summary>
+        /// delete by id
+        /// </summary>
+        /// <param name="id">id</param>
+        public virtual Task<bool> DeleteAsync(string id)
+        {
+            return Retry(() =>
+            {
+                return Task.Run(() =>
+                {
+                    return Delete(id);
+                }); 
             });
         }
 
@@ -152,11 +158,11 @@ namespace Repository.Mongo
         /// delete items with filter
         /// </summary>
         /// <param name="filter">expression filter</param>
-        public DeleteResult Delete(Expression<Func<T, bool>> filter)
+        public bool Delete(Expression<Func<T, bool>> filter)
         {
             return Retry(() =>
             {
-                return Collection.DeleteMany(filter);
+                return Collection.DeleteMany(filter).IsAcknowledged;
             });
         }
 
@@ -164,33 +170,39 @@ namespace Repository.Mongo
         /// delete items with filter
         /// </summary>
         /// <param name="filter">expression filter</param>
-        public Task<DeleteResult> DeleteAsync(Expression<Func<T, bool>> filter)
+        public Task<bool> DeleteAsync(Expression<Func<T, bool>> filter)
         {
             return Retry(() =>
             {
-                return Collection.DeleteManyAsync(filter);
+                return Task.Run(() =>
+                {
+                    return Delete(filter);
+                });
             });
         }
 
         /// <summary>
         /// delete all documents
         /// </summary>
-        public virtual DeleteResult DeleteAll()
+        public virtual bool DeleteAll()
         {
             return Retry(() =>
             {
-                return Collection.DeleteMany(Filter.Empty);
+                return Collection.DeleteMany(Filter.Empty).IsAcknowledged;
             });
         }
 
         /// <summary>
         /// delete all documents
         /// </summary>
-        public virtual Task<DeleteResult> DeleteAllAsync()
+        public virtual Task<bool> DeleteAllAsync()
         {
             return Retry(() =>
             {
-                return Collection.DeleteManyAsync(Filter.Empty);
+                return Task.Run(() =>
+                {
+                    return DeleteAll();
+                });
             });
         }
         #endregion Delete
@@ -478,11 +490,11 @@ namespace Repository.Mongo
         /// replace an existing entity
         /// </summary>
         /// <param name="entity">entity</param>
-        public virtual ReplaceOneResult Replace(T entity)
+        public virtual bool Replace(T entity)
         {
             return Retry(() =>
             {
-                return Collection.ReplaceOne(i => i.Id == entity.Id, entity);
+                return Collection.ReplaceOne(i => i.Id == entity.Id, entity).IsAcknowledged;
             });
         }
 
@@ -490,11 +502,14 @@ namespace Repository.Mongo
         /// replace an existing entity
         /// </summary>
         /// <param name="entity">entity</param>
-        public virtual Task<ReplaceOneResult> ReplaceAsync(T entity)
+        public virtual Task<bool> ReplaceAsync(T entity)
         {
             return Retry(() =>
             {
-                return Collection.ReplaceOneAsync(i => i.Id == entity.Id, entity);
+                return Task.Run(() =>
+                {
+                    return Replace(entity);
+                });
             });
         }
 
@@ -534,9 +549,12 @@ namespace Repository.Mongo
         /// <param name="entity">entity</param>
         /// <param name="field">field</param>
         /// <param name="value">new value</param>
-        public Task<UpdateResult> UpdateAsync<TField>(T entity, Expression<Func<T, TField>> field, TField value)
+        public Task<bool> UpdateAsync<TField>(T entity, Expression<Func<T, TField>> field, TField value)
         {
-            return UpdateAsync(entity, Updater.Set(field, value));
+            return Task.Run(() =>
+            {
+                return Update(entity, Updater.Set(field, value));
+            });
         }
 
         /// <summary>
@@ -555,9 +573,12 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="id">id</param>
         /// <param name="updates">updated field(s)</param>
-        public virtual Task<UpdateResult> UpdateAsync(string id, params UpdateDefinition<T>[] updates)
+        public virtual Task<bool> UpdateAsync(string id, params UpdateDefinition<T>[] updates)
         {
-            return UpdateAsync(Filter.Eq(i => i.Id, id), updates);
+            return Task.Run(() =>
+            {
+                return Update(Filter.Eq(i => i.Id, id), updates);
+            });
         }
 
         /// <summary>
@@ -576,9 +597,12 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="entity">entity</param>
         /// <param name="updates">updated field(s)</param>
-        public virtual Task<UpdateResult> UpdateAsync(T entity, params UpdateDefinition<T>[] updates)
+        public virtual Task<bool> UpdateAsync(T entity, params UpdateDefinition<T>[] updates)
         {
-            return UpdateAsync(entity.Id, updates);
+            return Task.Run(() =>
+            {
+                return Update(entity.Id, updates);
+            });
         }
 
         /// <summary>
@@ -601,9 +625,12 @@ namespace Repository.Mongo
         /// <param name="filter">filter</param>
         /// <param name="field">field</param>
         /// <param name="value">new value</param>
-        public Task<UpdateResult> UpdateAsync<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value)
+        public Task<bool> UpdateAsync<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value)
         {
-            return UpdateAsync(filter, Updater.Set(field, value));
+            return Task.Run(() =>
+            {
+                return Update(filter, Updater.Set(field, value));
+            });
         }
 
         /// <summary>
@@ -626,12 +653,14 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter">collection filter</param>
         /// <param name="updates">updated field(s)</param>
-        public Task<UpdateResult> UpdateAsync(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates)
+        public Task<bool> UpdateAsync(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates)
         {
             return Retry(() =>
             {
-                var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
-                return Collection.UpdateManyAsync(filter, update.CurrentDate(i => i.ModifiedOn));
+                return Task.Run(() =>
+                {
+                    return Update(filter, updates);
+                });
             });
         }
 
@@ -655,12 +684,14 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter">collection filter</param>
         /// <param name="updates">updated field(s)</param>
-        public Task<UpdateResult> UpdateAsync(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates)
+        public Task<bool> UpdateAsync(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates)
         {
             return Retry(() =>
             {
-                var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
-                return Collection.UpdateManyAsync(filter, update);
+                return Task.Run(() =>
+                {
+                    return Update(filter, updates);
+                });
             });
         }
 
@@ -734,37 +765,6 @@ namespace Repository.Mongo
             });
         }
         #endregion Count
-
-        #region Indexes
-
-        /// <summary>
-        /// Create index for the collection
-        /// </summary>
-        /// <param name="keys">index definition</param>
-        /// <param name="options">options</param>
-        /// <returns>name of the index</returns>
-        public virtual string CreateIndex(IndexKeysDefinition<T> keys, CreateIndexOptions options = null)
-        {
-            return Retry(() =>
-            {
-                return Collection.Indexes.CreateOne(keys, options);
-            });
-        }
-
-        /// <summary>
-        /// Create multiple index for the collection
-        /// </summary>
-        /// <param name="models">index definition</param>
-        /// <returns>names of the indexes</returns>
-        public virtual IEnumerable<string> CreateIndex(IEnumerable<CreateIndexModel<T>> models)
-        {
-            return Retry(() =>
-            {
-                return Collection.Indexes.CreateMany(models);
-            });
-        }
-
-        #endregion Indexes
 
         #endregion Utils
 

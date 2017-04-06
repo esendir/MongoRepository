@@ -4,13 +4,13 @@
     <Description>Repository pattern for MongoDB</Description>
     <AssemblyTitle>Repository.Mongo</AssemblyTitle>
     <VersionPrefix>2.0.0</VersionPrefix>
-    <Authors>UsameEsendir</Authors>
+    <Authors>Usame Esendir</Authors>
     <TargetFrameworks>netstandard1.5;net45</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Repository.Mongo</AssemblyName>
     <PackageId>Repository.Mongo</PackageId>
-    <PackageTags>mongo;mongodb;repository</PackageTags>
-    <PackageReleaseNotes>Support for .NetStandard1.5</PackageReleaseNotes>
+    <PackageTags>repository;mongo;mongodb;</PackageTags>
+    <PackageReleaseNotes>Support for .NetStandard 1.5 and .Net 4.5</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/esendir/MongoRepository</PackageProjectUrl>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -18,9 +18,11 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <Version>2.0.0</Version>
+    <Version>2.0.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <RepositoryUrl></RepositoryUrl>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
