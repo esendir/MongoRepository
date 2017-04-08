@@ -1,4 +1,4 @@
-![build status](https://dissperltd.visualstudio.com/_apis/public/build/definitions/6c214d4e-3676-4b7d-b7fb-9d7079975c67/6/badge)
+![build status](https://dissperltd.visualstudio.com/_apis/public/build/definitions/6c214d4e-3676-4b7d-b7fb-9d7079975c67/7/badge)
 
 ## MongoRepository
 Repository pattern for MongoDB with extended features
