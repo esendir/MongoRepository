@@ -1,4 +1,7 @@
-![build status](https://dissperltd.visualstudio.com/_apis/public/build/definitions/6c214d4e-3676-4b7d-b7fb-9d7079975c67/7/badge)
+
+[![Visual Studio Team services](https://img.shields.io/vso/build/dissperltd/6c214d4e-3676-4b7d-b7fb-9d7079975c67/7.svg?style=flat-square)]()
+[![Version](https://img.shields.io/nuget/v/Repository.Mongo.svg?style=flat-square)](https://www.nuget.org/packages/Repository.Mongo)
+[![Downloads](https://img.shields.io/nuget/dt/Repository.Mongo.svg?style=flat-square)](https://www.nuget.org/packages/Repository.Mongo)
 
 ## MongoRepository
 Repository pattern for MongoDB with extended features
