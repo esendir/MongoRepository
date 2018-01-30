@@ -123,7 +123,7 @@ namespace Repository.Mongo
             string collectionname;
 
             // Check to see if the object (inherited from Entity) has a CollectionName attribute
-            var att = CustomAttributeExtensions.GetCustomAttribute<CollectionNameAttribute>(typeof(T).GetTypeInfo().Assembly);
+            var att = typeof(T).GetTypeInfo().GetCustomAttribute<CollectionNameAttribute>();
             if (att != null)
             {
                 // It does! Return the value specified by the CollectionName attribute
