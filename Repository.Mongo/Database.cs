@@ -102,7 +102,7 @@ namespace Repository.Mongo
         private static string GetCollectionNameFromInterface()
         {
             // Check to see if the object (inherited from Entity) has a CollectionName attribute
-            var att = CustomAttributeExtensions.GetCustomAttribute<CollectionNameAttribute>(typeof(T).GetTypeInfo().Assembly);
+            var att = CustomAttributeExtensions.GetCustomAttribute<CollectionNameAttribute>(typeof(T).GetTypeInfo());
 
             return att?.Name ?? typeof(T).Name;
         }
@@ -117,7 +117,7 @@ namespace Repository.Mongo
             string collectionname;
 
             // Check to see if the object (inherited from Entity) has a CollectionName attribute
-            var att = CustomAttributeExtensions.GetCustomAttribute<CollectionNameAttribute>(typeof(T).GetTypeInfo().Assembly);
+            var att = CustomAttributeExtensions.GetCustomAttribute<CollectionNameAttribute>(typeof(T).GetTypeInfo());
             if (att != null)
             {
                 // It does! Return the value specified by the CollectionName attribute
@@ -160,7 +160,7 @@ namespace Repository.Mongo
         private static string GetConnectionNameFromInterface()
         {
             // Check to see if the object (inherited from Entity) has a ConnectionName attribute
-            var att = CustomAttributeExtensions.GetCustomAttribute<ConnectionNameAttribute>(typeof(T).GetTypeInfo().Assembly);
+            var att = CustomAttributeExtensions.GetCustomAttribute<ConnectionNameAttribute>(typeof(T).GetTypeInfo());
             return att?.Name ?? typeof(T).Name;
         }
 
@@ -174,7 +174,7 @@ namespace Repository.Mongo
             string collectionname;
 
             // Check to see if the object (inherited from Entity) has a ConnectionName attribute
-            var att = CustomAttributeExtensions.GetCustomAttribute<ConnectionNameAttribute>(typeof(T).GetTypeInfo().Assembly);
+            var att = CustomAttributeExtensions.GetCustomAttribute<ConnectionNameAttribute>(typeof(T).GetTypeInfo());
             if (att != null)
             {
                 // It does! Return the value specified by the ConnectionName attribute
