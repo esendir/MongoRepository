@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace Repository.Mongo
 {
+    /// <typeparam name="T">The type to get the collection of.</typeparam>
     internal class Database<T> where T : IEntity
     {
         private Database()
@@ -24,7 +25,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Creates and returns a MongoCollection from the specified type and connectionstring.
         /// </summary>
-        /// <typeparam name="T">The type to get the collection of.</typeparam>
         /// <param name="connectionString">The connectionstring to use to get the collection from.</param>
         /// <returns>Returns a MongoCollection from the specified type and connectionstring.</returns>
         internal static IMongoCollection<T> GetCollectionFromConnectionString(string connectionString)
@@ -35,7 +35,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Creates and returns a MongoCollection from the connectionstring name and collection name
         /// </summary>
-        /// <typeparam name="T">The type to get the collection of.</typeparam>
         /// <param name="connectionString">The connectionstring to use to get the collection from.</param>
         /// <param name="collectionName">The name of the collection to use.</param>
         /// <returns>Returns a MongoCollection from the specified type and connectionstring.</returns>
@@ -47,7 +46,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Creates and returns a MongoCollection from the specified type and url.
         /// </summary>
-        /// <typeparam name="T">The type to get the collection of.</typeparam>
         /// <param name="url">The url to use to get the collection from.</param>
         /// <returns>Returns a MongoCollection from the specified type and url.</returns>
         internal static IMongoCollection<T> GetCollectionFromUrl(MongoUrl url)
@@ -58,7 +56,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Creates and returns a MongoCollection from the specified type and url.
         /// </summary>
-        /// <typeparam name="T">The type to get the collection of.</typeparam>
         /// <param name="url">The url to use to get the collection from.</param>
         /// <param name="collectionName">The name of the collection to use.</param>
         /// <returns>Returns a MongoCollection from the specified type and url.</returns>
@@ -83,7 +80,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Determines the collection name for T and assures it is not empty
         /// </summary>
-        /// <typeparam name="T">The type to determine the collection name for.</typeparam>
         /// <returns>Returns the collection name for T.</returns>
         private static string GetCollectionName()
         {
@@ -102,7 +98,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Determines the collection name from the specified type.
         /// </summary>
-        /// <typeparam name="T">The type to get the collection name from.</typeparam>
         /// <returns>Returns the collection name from the specified type.</returns>
         private static string GetCollectionNameFromInterface()
         {
@@ -115,7 +110,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Determines the collectionname from the specified type.
         /// </summary>
-        /// <param name="entitytype">The type of the entity to get the collectionname from.</param>
         /// <returns>Returns the collectionname from the specified type.</returns>
         private static string GetCollectionNameFromType()
         {
@@ -144,7 +138,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Determines the connection name for T and assures it is not empty
         /// </summary>
-        /// <typeparam name="T">The type to determine the connection name for.</typeparam>
         /// <returns>Returns the connection name for T.</returns>
         private static string GetConnectionName()
         {
@@ -163,7 +156,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Determines the connection name from the specified type.
         /// </summary>
-        /// <typeparam name="T">The type to get the connection name from.</typeparam>
         /// <returns>Returns the connection name from the specified type.</returns>
         private static string GetConnectionNameFromInterface()
         {
@@ -175,7 +167,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Determines the connection name from the specified type.
         /// </summary>
-        /// <param name="entitytype">The type of the entity to get the connection name from.</param>
         /// <returns>Returns the connection name from the specified type.</returns>
         private static string GetConnectionNameFromType()
         {
