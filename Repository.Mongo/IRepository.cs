@@ -398,6 +398,89 @@ namespace Repository.Mongo
         Task<bool> UpdateAsync(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates);
         #endregion Update
 
+        #region Push
+        /// <summary>
+        /// Push an item into array
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity">entity</param>
+        /// <param name="field">array field</param>
+        /// <param name="value">the value to be pushed into the array</param>
+        /// <returns></returns>
+        bool Push<TField>(T entity, FieldDefinition<T> field, TField value);
+
+        /// <summary>
+        /// Push an item into array
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity">entity</param>
+        /// <param name="field">array field</param>
+        /// <param name="value">the value to be pushed into the array</param>
+        /// <returns></returns>
+        Task<bool> PushAsync<TField>(T entity, FieldDefinition<T> field, TField value);
+
+        /// <summary>
+        /// Push an item into array
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        bool Push<TField>(T entity, Expression<Func<T, IEnumerable<TField>>> field, TField value);
+
+        /// <summary>
+        /// Push an item into array
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        Task<bool> PushAsync<TField>(T entity, Expression<Func<T, IEnumerable<TField>>> field, TField value);
+
+        /// <summary>
+        /// Push values into array
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        bool PushEach<TField>(T entity, Expression<Func<T, IEnumerable<TField>>> field, IEnumerable<TField> values);
+
+        /// <summary>
+        /// Push values into array
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        Task<bool> PushEachAsync<TField>(T entity, Expression<Func<T, IEnumerable<TField>>> field, IEnumerable<TField> values);
+
+        /// <summary>
+        /// push values into array field of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        bool PushEach<TField>(T entity, FieldDefinition<T> field, IEnumerable<TField> values);
+
+        /// <summary>
+        /// push values into array field of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        Task<bool> PushEachAsync<TField>(T entity, FieldDefinition<T> field, IEnumerable<TField> values);
+
+        #endregion Push
+
         #endregion CRUD
 
         #region Utils

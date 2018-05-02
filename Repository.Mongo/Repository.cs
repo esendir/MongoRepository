@@ -697,6 +697,119 @@ namespace Repository.Mongo
 
         #endregion Update
 
+        #region Push
+        /// <summary>
+        /// push value into field array of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool Push<TField>(T entity, FieldDefinition<T> field, TField value)
+        {
+            return Retry(() => Update(entity, Updater.Push(field, value)));
+        }
+
+        /// <summary>
+        /// push value into field array of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public virtual Task<bool> PushAsync<TField>(T entity, FieldDefinition<T> field, TField value)
+        {
+            return Retry(() => {
+                return Task.Run(() => Update(entity, Updater.Push(field, value)));
+            });
+        }
+
+        /// <summary>
+        /// push value into field array of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool Push<TField>(T entity, Expression<Func<T, IEnumerable<TField>>> field, TField value)
+        {
+            return Retry(() => Update(entity, Updater.Push(field, value)));
+        }
+
+        /// <summary>
+        /// push value into field array of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public virtual Task<bool> PushAsync<TField>(T entity, Expression<Func<T, IEnumerable<TField>>> field, TField value)
+        {
+            return Retry(() => {
+                return Task.Run(() => Update(entity, Updater.Push(field, value)));
+            });
+        }
+
+        /// <summary>
+        /// push values into array field of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public bool PushEach<TField>(T entity, Expression<Func<T, IEnumerable<TField>>> field, IEnumerable<TField> values)
+        {
+            return Retry(() => Update(entity, Updater.PushEach(field, values)));
+        }
+
+        /// <summary>
+        /// push values into array field of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public virtual Task<bool> PushEachAsync<TField>(T entity, Expression<Func<T, IEnumerable<TField>>> field, IEnumerable<TField> values)
+        {
+            return Retry(() => {
+                return Task.Run(() => Update(entity, Updater.PushEach(field, values)));
+            });
+        }
+
+        /// <summary>
+        /// push values into array field of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public bool PushEach<TField>(T entity, FieldDefinition<T> field, IEnumerable<TField> values)
+        {
+            return Retry(() => Update(entity, Updater.PushEach(field, values)));
+        }
+
+        /// <summary>
+        /// push values into array field of entity
+        /// </summary>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public virtual Task<bool> PushEachAsync<TField>(T entity, FieldDefinition<T> field, IEnumerable<TField> values)
+        {
+            return Retry(() => {
+                return Task.Run(() => Update(entity, Updater.PushEach(field, values)));
+            });
+        }
+
         #endregion CRUD
 
         #region Utils
