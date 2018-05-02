@@ -24,6 +24,9 @@ namespace Repository.Mongo
     {
         private DateTime _createdOn;
 
+        /// <summary>
+        /// Constructor, assigns new id
+        /// </summary>
         public Entity()
         {
             Id = ObjectId.GenerateNewId().ToString();
