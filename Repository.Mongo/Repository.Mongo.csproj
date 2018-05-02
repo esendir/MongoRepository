@@ -17,9 +17,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <Version>2.0.3</Version>
-    <AssemblyVersion>2.0.3</AssemblyVersion>
-    <FileVersion>2.0.3</FileVersion>
+    <Version>2.0.5</Version>
+    <AssemblyVersion>2.0.5</AssemblyVersion>
+    <FileVersion>2.0.5</FileVersion>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <RepositoryUrl></RepositoryUrl>
