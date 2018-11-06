@@ -91,6 +91,11 @@ namespace Repository.Mongo
             }
         }
 
+        private IFindFluent<T, T> Query(FilterDefinition<T> filter)
+        {
+            return Collection.Find(filter);
+        }
+
         private IFindFluent<T, T> Query(Expression<Func<T, bool>> filter)
         {
             return Collection.Find(filter);
@@ -208,6 +213,15 @@ namespace Repository.Mongo
         #endregion Delete
 
         #region Find
+        /// <summary>
+        /// find entities
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>collection of entity</returns>
+        public virtual IEnumerable<T> Find(FilterDefinition<T> filter)
+        {
+            return Query(filter).ToEnumerable();
+        }
 
         /// <summary>
         /// find entities
@@ -338,6 +352,16 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter">expression filter</param>
         /// <returns>entity of <typeparamref name="T"/></returns>
+        public T First(FilterDefinition<T> filter)
+        {
+            return Find(filter).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// get first item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
         public T First(Expression<Func<T, bool>> filter)
         {
             return First(filter, i => i.Id);
@@ -447,6 +471,16 @@ namespace Repository.Mongo
         public T Last()
         {
             return FindAll(i => i.Id, 0, 1, true).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// get last item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public T Last(FilterDefinition<T> filter)
+        {
+            return Query(filter).SortByDescending(i => i.Id).FirstOrDefault();
         }
 
         /// <summary>

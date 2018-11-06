@@ -93,6 +93,13 @@ namespace Repository.Mongo
         /// <summary>
         /// find entities
         /// </summary>
+        /// <param name="filter">filter definition</param>
+        /// <returns>collection of entity</returns>
+        IEnumerable<T> Find(FilterDefinition<T> filter);
+
+        /// <summary>
+        /// find entities
+        /// </summary>
         /// <param name="filter">expression filter</param>
         /// <returns>collection of entity</returns>
         IEnumerable<T> Find(Expression<Func<T, bool>> filter);
@@ -179,6 +186,13 @@ namespace Repository.Mongo
         /// <summary>
         /// get first item in query
         /// </summary>
+        /// <param name="filter">filter definition</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T First(FilterDefinition<T> filter);
+
+        /// <summary>
+        /// get first item in query
+        /// </summary>
         /// <param name="filter">expression filter</param>
         /// <returns>entity of <typeparamref name="T"/></returns>
         T First(Expression<Func<T, bool>> filter);
@@ -248,6 +262,13 @@ namespace Repository.Mongo
         /// </summary>
         /// <returns>entity of <typeparamref name="T"/></returns>
         T Last();
+
+        /// <summary>
+        /// get last item in query
+        /// </summary>
+        /// <param name="filter">filter definition</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        T Last(FilterDefinition<T> filter);
 
         /// <summary>
         /// get last item in query

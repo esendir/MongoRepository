@@ -17,9 +17,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <Version>2.0.5</Version>
-    <AssemblyVersion>2.0.5</AssemblyVersion>
-    <FileVersion>2.0.5</FileVersion>
+    <Version>2.1.0</Version>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <FileVersion>2.1.0</FileVersion>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <RepositoryUrl></RepositoryUrl>
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.6.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
     <PackageReference Include="Polly" Version="5.9.0" />
   </ItemGroup>
 
