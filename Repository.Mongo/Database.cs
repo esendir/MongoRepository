@@ -64,6 +64,26 @@ namespace Repository.Mongo
             return GetDatabaseFromUrl(url).GetCollection<T>(collectionName);
         }
 
+        internal static IMongoCollection<T> GetCollection(IMongoClient mongoClient, string databaseName)
+        {
+            return GetCollection(mongoClient.GetDatabase(databaseName), GetCollectionName());
+        }
+
+        internal static IMongoCollection<T> GetCollection(IMongoClient mongoClient, string databaseName, string collectionName)
+        {
+            return GetCollection(mongoClient.GetDatabase(databaseName), collectionName);
+        }
+
+        internal static IMongoCollection<T> GetCollection(IMongoDatabase mongoDatabase)
+        {
+            return GetCollection(mongoDatabase, GetCollectionName());
+        }
+
+        internal static IMongoCollection<T> GetCollection(IMongoDatabase mongoDatabase, string collectionName)
+        {
+            return mongoDatabase.GetCollection<T>(collectionName);
+        }
+
         /// <summary>
         /// Creates and returns a MongoDatabase from the specified url.
         /// </summary>

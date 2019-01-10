@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Repository.Mongo
@@ -21,6 +20,45 @@ namespace Repository.Mongo
         where T : IEntity
     {
         #region MongoSpecific
+        /// <summary>
+        /// if you already have mongo database and where collection name will be name of the repository
+        /// </summary>
+        /// <param name="mongoDatabase"></param>
+        public Repository(IMongoDatabase mongoDatabase)
+        {
+            Collection = Database<T>.GetCollection(mongoDatabase);
+        }
+
+        /// <summary>
+        /// if you already have mongo database
+        /// </summary>
+        /// <param name="mongoDatabase"></param>
+        /// <param name="collectionName"></param>
+        public Repository(IMongoDatabase mongoDatabase, string collectionName)
+        {
+            Collection = Database<T>.GetCollection(mongoDatabase, collectionName);
+        }
+
+        /// <summary>
+        /// if you already have mongo client and where collection name will be name of the repository
+        /// </summary>
+        /// <param name="mongoClient">mongo client object</param>
+        /// <param name="databaseName">database name</param>
+        public Repository(IMongoClient mongoClient, string databaseName)
+        {
+            Collection = Database<T>.GetCollection(mongoClient, databaseName);
+        }
+
+        /// <summary>
+        /// if you already have mongo client
+        /// </summary>
+        /// <param name="mongoClient">mongo client object</param>
+        /// <param name="databaseName">database name</param>
+        /// <param name="collectionName">collection name</param>
+        public Repository(IMongoClient mongoClient, string databaseName, string collectionName)
+        {
+            Collection = Database<T>.GetCollection(mongoClient, databaseName, collectionName);
+        }
 
         /// <summary>
         /// where you need to define a connectionString with the name of repository
