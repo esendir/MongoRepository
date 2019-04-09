@@ -1,14 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
-using Polly;
-using Polly.Retry;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+// Polly
+using Polly;
+using Polly.Retry;
+// MongoDB
+using MongoDB.Driver;
 
 namespace Repository.Mongo
 {
@@ -193,7 +195,7 @@ namespace Repository.Mongo
                 return Task.Run(() =>
                 {
                     return Delete(id);
-                }); 
+                });
             });
         }
 
@@ -792,6 +794,7 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter">expression filter</param>
         /// <returns>number of documents</returns>
+        [Obsolete("Use EstimatedCount instead.")]
         public long Count(Expression<Func<T, bool>> filter)
         {
             return Retry(() =>
@@ -805,6 +808,7 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter">expression filter</param>
         /// <returns>number of documents</returns>
+        [Obsolete("Use EstimatedCountAsync instead.")]
         public Task<long> CountAsync(Expression<Func<T, bool>> filter)
         {
             return Retry(() =>
@@ -817,6 +821,7 @@ namespace Repository.Mongo
         /// get number of documents in collection
         /// </summary>
         /// <returns>number of documents</returns>
+        [Obsolete("Use EstimatedCount instead.")]
         public long Count()
         {
             return Retry(() =>
@@ -829,6 +834,7 @@ namespace Repository.Mongo
         /// get number of documents in collection
         /// </summary>
         /// <returns>number of documents</returns>
+        [Obsolete("Use EstimatedCountAsync instead.")]
         public Task<long> CountAsync()
         {
             return Retry(() =>
@@ -837,6 +843,58 @@ namespace Repository.Mongo
             });
         }
         #endregion Count
+
+        #region EstimatedCount
+        /// <summary>
+        /// get number of filtered documents
+        /// </summary>
+        /// <param name="options">count options</param>
+        /// <returns>number of documents</returns>        
+        public long EstimatedCount(EstimatedDocumentCountOptions options)
+        {
+            return Retry(() =>
+            {
+                return Collection.EstimatedDocumentCount(options);
+            });
+        }
+
+        /// <summary>
+        /// get number of filtered documents
+        /// </summary>
+        /// <param name="options">count options</param>
+        /// <returns>number of documents</returns>        
+        public Task<long> EstimatedCountAsync(EstimatedDocumentCountOptions options)
+        {
+            return Retry(() =>
+            {
+                return Collection.EstimatedDocumentCountAsync(options);
+            });
+        }
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        public long EstimatedCount()
+        {
+            return Retry(() =>
+            {
+                return Collection.EstimatedDocumentCount();
+            });
+        }
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        public Task<long> EstimatedCountAsync()
+        {
+            return Retry(() =>
+            {
+                return Collection.EstimatedDocumentCountAsync();
+            });
+        }
+        #endregion Estimated Count
 
         #endregion Utils
 
