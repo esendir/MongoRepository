@@ -1,8 +1,9 @@
-﻿using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+// MongoDB
+using MongoDB.Driver;
 
 namespace Repository.Mongo
 {
@@ -435,6 +436,7 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter">expression filter</param>
         /// <returns>number of documents</returns>
+        [Obsolete("Use EstimatedCount instead.")]
         long Count(Expression<Func<T, bool>> filter);
 
         /// <summary>
@@ -442,20 +444,51 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter">expression filter</param>
         /// <returns>number of documents</returns>
+        [Obsolete("Use EstimatedCountAsync instead.")]
         Task<long> CountAsync(Expression<Func<T, bool>> filter);
 
         /// <summary>
         /// get number of documents in collection
         /// </summary>
         /// <returns>number of documents</returns>
+        [Obsolete("Use EstimatedCount instead.")]
         long Count();
 
         /// <summary>
         /// get number of documents in collection
         /// </summary>
         /// <returns>number of documents</returns>
+        [Obsolete("Use EstimatedCountAsync instead.")]
         Task<long> CountAsync();
         #endregion Count
+
+        #region EstimatedCount
+        /// <summary>
+        /// get number of documents with options
+        /// </summary>
+        /// <param name="options">count options</param>
+        /// <returns>number of documents</returns>
+        long EstimatedCount(EstimatedDocumentCountOptions options);
+
+        /// <summary>
+        /// get number of documents with options
+        /// </summary>
+        /// <param name="options">count options</param>
+        /// <returns>number of documents</returns>
+        Task<long> EstimatedCountAsync(EstimatedDocumentCountOptions options);
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        long EstimatedCount();
+
+        /// <summary>
+        /// get number of documents in collection
+        /// </summary>
+        /// <returns>number of documents</returns>
+        Task<long> EstimatedCountAsync();
+        #endregion EstimatedCount
 
         #endregion Utils
     }
