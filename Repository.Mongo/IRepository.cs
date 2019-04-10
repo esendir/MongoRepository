@@ -319,6 +319,19 @@ namespace Repository.Mongo
 
         #endregion Replace
 
+        #region FindOneAndUpdate
+
+        /// <summary>
+        /// Find by filter definition and update with update definition
+        /// </summary>
+        /// <param name="filter">filter definition</param>
+        /// <param name="update">update definition</param>
+        /// <param name="options">optional options like isUpsert</param>
+        /// <returns>returns T</returns>
+        T FindOneAndUpdate(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
+
+        #endregion FindOneAndUpdate
+
         #region Update
 
         /// <summary>

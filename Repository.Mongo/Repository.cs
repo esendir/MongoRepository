@@ -145,6 +145,7 @@ namespace Repository.Mongo
         {
             return Collection.Find(Filter.Empty);
         }
+
         #endregion MongoSpecific
 
         #region CRUD
@@ -251,7 +252,7 @@ namespace Repository.Mongo
             });
         }
         #endregion Delete
-
+        
         #region Find
         /// <summary>
         /// find entities
@@ -600,6 +601,22 @@ namespace Repository.Mongo
         }
 
         #endregion Replace
+
+        #region FindOneAndUpdate
+        
+        /// <summary>
+        /// find one and update
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns>return updated entity</returns>
+        public T FindOneAndUpdate(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
+        {
+            return Collection.FindOneAndUpdate(filter, update, options);
+        }
+
+        #endregion FindOneAndUpdate
 
         #region Update
 
