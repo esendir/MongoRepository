@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.10
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository.Mongo", "Repository.Mongo\Repository.Mongo.csproj", "{99AE887A-DB4A-4C56-80C8-21F36007028D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Mongo.Tests", "Repository.Mongo.Tests\Repository.Mongo.Tests.csproj", "{D593B165-DC0F-44E0-9010-2A8A58C9C911}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{99AE887A-DB4A-4C56-80C8-21F36007028D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99AE887A-DB4A-4C56-80C8-21F36007028D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99AE887A-DB4A-4C56-80C8-21F36007028D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D593B165-DC0F-44E0-9010-2A8A58C9C911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D593B165-DC0F-44E0-9010-2A8A58C9C911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D593B165-DC0F-44E0-9010-2A8A58C9C911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D593B165-DC0F-44E0-9010-2A8A58C9C911}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A3BA3A2-3547-4ACF-A0C6-1CDABB6765BE}
 	EndGlobalSection
 EndGlobal
