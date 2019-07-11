@@ -1,7 +1,9 @@
-﻿using MongoDB.Driver;
-using System;
-using Microsoft.Extensions.Configuration;
+﻿using System;
 using System.Reflection;
+// Nuget Microsoft
+using Microsoft.Extensions.Configuration;
+// Nuget MongoDB
+using MongoDB.Driver;
 
 namespace Repository.Mongo
 {

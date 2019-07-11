@@ -5,11 +5,12 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+// Nuget Microsoft
 using Microsoft.Extensions.Configuration;
-// Polly
+// Nuget Polly
 using Polly;
 using Polly.Retry;
-// MongoDB
+// Nuget MongoDB
 using MongoDB.Driver;
 
 namespace Repository.Mongo
