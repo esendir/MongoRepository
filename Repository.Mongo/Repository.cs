@@ -22,13 +22,20 @@ namespace Repository.Mongo
         where T : IEntity
     {
         #region MongoSpecific
+        private IMongoCollection<T> _collection;
+        private readonly IMongoDatabase _mongoDatabase;
+        private readonly string _connectionString;
+        private readonly string _collectionName;
+        private readonly IConfiguration _config;
+        private readonly IMongoClient _mongoClient;
+        private readonly string _databaseName;
+
         /// <summary>
         /// if you already have mongo database and where collection name will be name of the repository
         /// </summary>
         /// <param name="mongoDatabase"></param>
-        public Repository(IMongoDatabase mongoDatabase)
+        public Repository(IMongoDatabase mongoDatabase): this(mongoDatabase, null)
         {
-            Collection = Database<T>.GetCollection(mongoDatabase);
         }
 
         /// <summary>
@@ -38,7 +45,8 @@ namespace Repository.Mongo
         /// <param name="collectionName"></param>
         public Repository(IMongoDatabase mongoDatabase, string collectionName)
         {
-            Collection = Database<T>.GetCollection(mongoDatabase, collectionName);
+            _mongoDatabase = mongoDatabase;
+            _collectionName = collectionName;
         }
 
         /// <summary>
@@ -46,9 +54,8 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="mongoClient">mongo client object</param>
         /// <param name="databaseName">database name</param>
-        public Repository(IMongoClient mongoClient, string databaseName)
+        public Repository(IMongoClient mongoClient, string databaseName) : this(mongoClient, databaseName, null)
         {
-            Collection = Database<T>.GetCollection(mongoClient, databaseName);
         }
 
         /// <summary>
@@ -59,7 +66,9 @@ namespace Repository.Mongo
         /// <param name="collectionName">collection name</param>
         public Repository(IMongoClient mongoClient, string databaseName, string collectionName)
         {
-            Collection = Database<T>.GetCollection(mongoClient, databaseName, collectionName);
+            _mongoClient = mongoClient;
+            _databaseName = databaseName;
+            _collectionName = collectionName;
         }
 
         /// <summary>
@@ -68,16 +77,15 @@ namespace Repository.Mongo
         /// <param name="config">config interface to read default settings</param>
         public Repository(IConfiguration config)
         {
-            Collection = Database<T>.GetCollection(config);
+            _config = config;
         }
 
         /// <summary>
         /// where collection name will be name of the repository
         /// </summary>
         /// <param name="connectionString">connection string</param>
-        public Repository(string connectionString)
+        public Repository(string connectionString): this(connectionString, null)
         {
-            Collection = Database<T>.GetCollectionFromConnectionString(connectionString);
         }
 
         /// <summary>
@@ -87,7 +95,28 @@ namespace Repository.Mongo
         /// <param name="collectionName">collection name</param>
         public Repository(string connectionString, string collectionName)
         {
-            Collection = Database<T>.GetCollectionFromConnectionString(connectionString, collectionName);
+            _connectionString = connectionString;
+            _collectionName = collectionName;
+        }
+
+        private IMongoCollection<T> GetCollection()
+        {
+            if(_mongoDatabase != null)
+            {
+                return Database<T>.GetCollection(_mongoDatabase, _collectionName);
+            }
+
+            if(_mongoClient != null)
+            {
+                return Database<T>.GetCollection(_mongoClient, _databaseName, _collectionName);
+            }
+
+            if(_config != null)
+            {
+                return Database<T>.GetCollection(_config);
+            }
+
+            return Database<T>.GetCollectionFromConnectionString(_connectionString, _collectionName);
         }
 
         /// <summary>
@@ -95,7 +124,13 @@ namespace Repository.Mongo
         /// </summary>
         public IMongoCollection<T> Collection
         {
-            get; private set;
+            get
+            {
+                if (_collection == null)
+                    _collection = GetCollection();
+                return _collection;
+
+            }
         }
 
         /// <summary>

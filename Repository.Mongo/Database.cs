@@ -19,19 +19,9 @@ namespace Repository.Mongo
         /// <returns></returns>
         internal static IMongoCollection<T> GetCollection(IConfiguration config)
         {
-            return GetCollectionFromConnectionString(GetDefaultConnectionString(config));
+            return GetCollectionFromConnectionString(GetDefaultConnectionString(config), null);
         }
-
-        /// <summary>
-        /// Creates and returns a MongoCollection from the specified type and connectionstring.
-        /// </summary>
-        /// <param name="connectionString">The connectionstring to use to get the collection from.</param>
-        /// <returns>Returns a MongoCollection from the specified type and connectionstring.</returns>
-        internal static IMongoCollection<T> GetCollectionFromConnectionString(string connectionString)
-        {
-            return GetCollectionFromConnectionString(connectionString, GetCollectionName());
-        }
-
+        
         /// <summary>
         /// Creates and returns a MongoCollection from the connectionstring name and collection name
         /// </summary>
@@ -40,17 +30,7 @@ namespace Repository.Mongo
         /// <returns>Returns a MongoCollection from the specified type and connectionstring.</returns>
         internal static IMongoCollection<T> GetCollectionFromConnectionString(string connectionString, string collectionName)
         {
-            return GetCollectionFromUrl(new MongoUrl(connectionString), collectionName);
-        }
-
-        /// <summary>
-        /// Creates and returns a MongoCollection from the specified type and url.
-        /// </summary>
-        /// <param name="url">The url to use to get the collection from.</param>
-        /// <returns>Returns a MongoCollection from the specified type and url.</returns>
-        internal static IMongoCollection<T> GetCollectionFromUrl(MongoUrl url)
-        {
-            return GetCollectionFromUrl(url, GetCollectionName());
+            return GetCollectionFromUrl(new MongoUrl(connectionString), collectionName ?? GetCollectionName());
         }
 
         /// <summary>
@@ -61,27 +41,17 @@ namespace Repository.Mongo
         /// <returns>Returns a MongoCollection from the specified type and url.</returns>
         internal static IMongoCollection<T> GetCollectionFromUrl(MongoUrl url, string collectionName)
         {
-            return GetDatabaseFromUrl(url).GetCollection<T>(collectionName);
-        }
-
-        internal static IMongoCollection<T> GetCollection(IMongoClient mongoClient, string databaseName)
-        {
-            return GetCollection(mongoClient.GetDatabase(databaseName), GetCollectionName());
+            return GetDatabaseFromUrl(url).GetCollection<T>(collectionName ?? GetCollectionName());
         }
 
         internal static IMongoCollection<T> GetCollection(IMongoClient mongoClient, string databaseName, string collectionName)
         {
-            return GetCollection(mongoClient.GetDatabase(databaseName), collectionName);
-        }
-
-        internal static IMongoCollection<T> GetCollection(IMongoDatabase mongoDatabase)
-        {
-            return GetCollection(mongoDatabase, GetCollectionName());
+            return GetCollection(mongoClient.GetDatabase(databaseName), collectionName ?? GetCollectionName());
         }
 
         internal static IMongoCollection<T> GetCollection(IMongoDatabase mongoDatabase, string collectionName)
         {
-            return mongoDatabase.GetCollection<T>(collectionName);
+            return mongoDatabase.GetCollection<T>(collectionName ?? GetCollectionName());
         }
 
         /// <summary>
