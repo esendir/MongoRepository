@@ -448,58 +448,42 @@ namespace Repository.Mongo
         /// get number of filtered documents
         /// </summary>
         /// <param name="filter">expression filter</param>
-        /// <returns>number of documents</returns>
-        [Obsolete("Use EstimatedCount instead.")]
+        /// <returns>returns the count of documents that match the query for a collection or view.</returns>
         long Count(Expression<Func<T, bool>> filter);
 
         /// <summary>
-        /// get number of filtered documents
+        /// get number of filtered documents async
         /// </summary>
         /// <param name="filter">expression filter</param>
-        /// <returns>number of documents</returns>
-        [Obsolete("Use EstimatedCountAsync instead.")]
+        /// <returns>returns the count of documents that match the query for a collection or view.</returns>
         Task<long> CountAsync(Expression<Func<T, bool>> filter);
-
-        /// <summary>
-        /// get number of documents in collection
-        /// </summary>
-        /// <returns>number of documents</returns>
-        [Obsolete("Use EstimatedCount instead.")]
-        long Count();
-
-        /// <summary>
-        /// get number of documents in collection
-        /// </summary>
-        /// <returns>number of documents</returns>
-        [Obsolete("Use EstimatedCountAsync instead.")]
-        Task<long> CountAsync();
         #endregion Count
 
         #region EstimatedCount
         /// <summary>
-        /// get number of documents with options
+        /// get number of all documents in collection with options
         /// </summary>
         /// <param name="options">count options</param>
-        /// <returns>number of documents</returns>
+        /// <returns>returns the count of all documents in a collection or view with count options.</returns> 
         long EstimatedCount(EstimatedDocumentCountOptions options);
 
         /// <summary>
-        /// get number of documents with options
+        /// get number of all documents in collection with options
         /// </summary>
         /// <param name="options">count options</param>
-        /// <returns>number of documents</returns>
+        /// <returns>returns the count of all documents in a collection or view with count options.</returns> 
         Task<long> EstimatedCountAsync(EstimatedDocumentCountOptions options);
 
         /// <summary>
-        /// get number of documents in collection
+        /// get number of all documents in collection
         /// </summary>
-        /// <returns>number of documents</returns>
+        /// <returns>returns the count of all documents in a collection or view.</returns>
         long EstimatedCount();
 
         /// <summary>
-        /// get number of documents in collection
+        /// get number of all documents in collection
         /// </summary>
-        /// <returns>number of documents</returns>
+        /// <returns>returns the count of all documents in a collection or view.</returns>
         Task<long> EstimatedCountAsync();
         #endregion EstimatedCount
 

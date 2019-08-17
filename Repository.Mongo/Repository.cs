@@ -846,63 +846,35 @@ namespace Repository.Mongo
         /// get number of filtered documents
         /// </summary>
         /// <param name="filter">expression filter</param>
-        /// <returns>number of documents</returns>
-        [Obsolete("Use EstimatedCount instead.")]
+        /// <returns>returns the count of documents that match the query for a collection or view.</returns>
         public long Count(Expression<Func<T, bool>> filter)
         {
             return Retry(() =>
             {
-                return Collection.Count(filter);
+                return Collection.CountDocuments(filter);
             });
         }
 
         /// <summary>
-        /// get number of filtered documents
+        /// get number of filtered documents async
         /// </summary>
         /// <param name="filter">expression filter</param>
-        /// <returns>number of documents</returns>
-        [Obsolete("Use EstimatedCountAsync instead.")]
+        /// <returns>returns the count of documents that match the query for a collection or view.</returns>
         public Task<long> CountAsync(Expression<Func<T, bool>> filter)
         {
             return Retry(() =>
             {
-                return Collection.CountAsync(filter);
-            });
-        }
-
-        /// <summary>
-        /// get number of documents in collection
-        /// </summary>
-        /// <returns>number of documents</returns>
-        [Obsolete("Use EstimatedCount instead.")]
-        public long Count()
-        {
-            return Retry(() =>
-            {
-                return Collection.Count(Filter.Empty);
-            });
-        }
-
-        /// <summary>
-        /// get number of documents in collection
-        /// </summary>
-        /// <returns>number of documents</returns>
-        [Obsolete("Use EstimatedCountAsync instead.")]
-        public Task<long> CountAsync()
-        {
-            return Retry(() =>
-            {
-                return Collection.CountAsync(Filter.Empty);
+                return Collection.CountDocumentsAsync(filter);
             });
         }
         #endregion Count
 
         #region EstimatedCount
         /// <summary>
-        /// get number of filtered documents
+        /// get number of all documents in collection
         /// </summary>
         /// <param name="options">count options</param>
-        /// <returns>number of documents</returns>        
+        /// <returns>returns the count of all documents in a collection or view with count options.</returns>        
         public long EstimatedCount(EstimatedDocumentCountOptions options)
         {
             return Retry(() =>
@@ -912,10 +884,10 @@ namespace Repository.Mongo
         }
 
         /// <summary>
-        /// get number of filtered documents
+        /// get number of all documents in collection
         /// </summary>
         /// <param name="options">count options</param>
-        /// <returns>number of documents</returns>        
+        /// <returns>returns the count of all documents in a collection or view with count options.</returns>        
         public Task<long> EstimatedCountAsync(EstimatedDocumentCountOptions options)
         {
             return Retry(() =>
@@ -925,9 +897,9 @@ namespace Repository.Mongo
         }
 
         /// <summary>
-        /// get number of documents in collection
+        /// get number of all documents in collection
         /// </summary>
-        /// <returns>number of documents</returns>
+        /// <returns>returns the count of all documents in a collection or view.</returns>
         public long EstimatedCount()
         {
             return Retry(() =>
@@ -937,9 +909,9 @@ namespace Repository.Mongo
         }
 
         /// <summary>
-        /// get number of documents in collection
+        /// get number of all documents in collection
         /// </summary>
-        /// <returns>number of documents</returns>
+        /// <returns>returns the count of all documents in a collection or view.</returns>
         public Task<long> EstimatedCountAsync()
         {
             return Retry(() =>
