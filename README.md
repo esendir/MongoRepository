@@ -61,40 +61,48 @@ Each method has multiple overloads, read method summary for additional parameter
 ```csharp
 	UserRepository repo = new UserRepository("mongodb://localhost/sample")
 
-	//Get
+	// Get
 	User user = repo.Get("58a18d16bc1e253bb80a67c9");
 
-	//Insert
+	// Insert
 	User item = new User(){
 		Username = "username",
 		Password = "password"
 	};
 	repo.Insert(item);
 
-	//Update
-	//single property
+	// Update
+	// Single property
 	repo.Update(item, i => i.Username, "newUsername");
 
-	//multiple property
-	//Updater has many methods like Inc, Push, CurrentDate, etc.
+	// Multiple property
+	// Updater has many methods like Inc, Push, CurrentDate, etc.
 	var update1 = Updater.Set(i => i.Username, "oldUsername");
 	var update2 = Updater.Set(i => i.Password, "newPassword");
 	repo.Update(item, update1, update2);
 
-	//all entity
+	// All entity
 	item.Username = "someUsername";
 	repo.Replace(item);
 
-	//Delete
+	// Delete
 	repo.Delete(item);
 
-	//Queries - all queries has filter, order and paging features
+	// Queries - all queries has filter, order and paging features
 	var first = repo.First();
 	var last = repo.Last();
 	var search = repo.Find(i => i.Username == "username");
 	var allItems = repo.FindAll();
 
-	//Utils
-	var count = repo.Count();
+	// Utils
 	var any = repo.Any(i => i.Username.Contains("user"));
+	
+	// Count
+	// Get number of filtered documents
+	var count = repo.Count(p => p.Age > 20);
+	
+	// EstimatedCount
+	// Get number of all documents
+	var count = repo.EstimatedCount();
+	
 ```
