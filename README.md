@@ -1,5 +1,5 @@
 
-[![Visual Studio Team services](https://img.shields.io/vso/build/dissperltd/6c214d4e-3676-4b7d-b7fb-9d7079975c67/7.svg?style=flat-square)]()
+[![Build Status](https://dev.azure.com/doxalabs/Mongo%20Repository/_apis/build/status/fatihyildizhan.MongoRepository?branchName=master)](https://dev.azure.com/doxalabs/Mongo%20Repository/_build/latest?definitionId=20&branchName=master)
 [![Version](https://img.shields.io/nuget/v/Repository.Mongo.svg?style=flat-square)](https://www.nuget.org/packages/Repository.Mongo)
 [![Downloads](https://img.shields.io/nuget/dt/Repository.Mongo.svg?style=flat-square)](https://www.nuget.org/packages/Repository.Mongo)
 
