@@ -1,5 +1,5 @@
 
-[![Build Status](https://dev.azure.com/doxalabs/Mongo%20Repository/_apis/build/status/fatihyildizhan.MongoRepository?branchName=master)](https://dev.azure.com/doxalabs/Mongo%20Repository/_build/latest?definitionId=20&branchName=master)
+[![Build Status](https://dev.azure.com/doxalabs/Public%20DevOps%20Pipelines/_apis/build/status/fatihyildizhan.MongoRepository?branchName=master)](https://dev.azure.com/doxalabs/Public%20DevOps%20Pipelines/_build/latest?definitionId=20&branchName=master)
 [![Version](https://img.shields.io/nuget/v/Repository.Mongo.svg?style=flat-square)](https://www.nuget.org/packages/Repository.Mongo)
 [![Downloads](https://img.shields.io/nuget/dt/Repository.Mongo.svg?style=flat-square)](https://www.nuget.org/packages/Repository.Mongo)
 
