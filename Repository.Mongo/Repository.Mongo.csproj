@@ -4,11 +4,11 @@
     <Description>Repository pattern for MongoDB</Description>
     <AssemblyTitle>Repository.Mongo</AssemblyTitle>
     <Authors>Usame Esendir</Authors>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard1.5;net452;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Repository.Mongo</AssemblyName>
     <PackageId>Repository.Mongo</PackageId>
-    <PackageTags>mongo;repository;mongodb;</PackageTags>
+    <PackageTags>mongo;repository;mongodb;nosql;</PackageTags>
     <PackageReleaseNotes>New constructors to support more IoC options</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/esendir/MongoRepository</PackageProjectUrl>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -30,7 +30,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.9.1" />
-    <PackageReference Include="Polly" Version="6.0.1" />
+    <PackageReference Include="Polly" Version="5.9.0" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -42,11 +42,11 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD2_0;NET452</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_5;NET452;netstandard2.0</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
+    <DocumentationFile>obj\Debug\netstandard1.5\Repository.Mongo.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>
