@@ -1,6 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using System;
+// Nuget MongoDB
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
 
 namespace Repository.Mongo
 {
