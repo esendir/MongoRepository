@@ -4,7 +4,7 @@
     <Description>Repository pattern for MongoDB</Description>
     <AssemblyTitle>Repository.Mongo</AssemblyTitle>
     <Authors>Usame Esendir</Authors>
-    <TargetFrameworks>netstandard1.5;net452;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.5;netstandard2.0;net452</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Repository.Mongo</AssemblyName>
     <PackageId>Repository.Mongo</PackageId>
@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.9.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.9.2" />
     <PackageReference Include="Polly" Version="5.9.0" />
   </ItemGroup>
   
@@ -37,12 +37,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
   </ItemGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)'!='netstandard2.0'">
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.5'">
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.2" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_5;NET452;netstandard2.0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_5;netstandard2_0;NET452</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
