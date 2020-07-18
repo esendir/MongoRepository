@@ -192,6 +192,13 @@ namespace Repository.Mongo
         T First(FilterDefinition<T> filter);
 
         /// <summary>
+        /// get first item in query as async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        Task<T> FirstAsync(FilterDefinition<T> filter);
+
+        /// <summary>
         /// get first item in query
         /// </summary>
         /// <param name="filter">expression filter</param>

@@ -172,6 +172,11 @@ namespace Repository.Mongo
             return Collection.Find(filter);
         }
 
+        private async Task<IAsyncCursor<T>> QueryAsync(FilterDefinition<T> filter)
+        {
+            return await Collection.FindAsync(filter);
+        }
+
         private IFindFluent<T, T> Query(Expression<Func<T, bool>> filter)
         {
             return Collection.Find(filter);
@@ -298,6 +303,16 @@ namespace Repository.Mongo
         public virtual IEnumerable<T> Find(FilterDefinition<T> filter)
         {
             return Query(filter).ToEnumerable();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public virtual async Task<IAsyncCursor<T>> FindAsync(FilterDefinition<T> filter)
+        {
+            return await QueryAsync(filter);
         }
 
         /// <summary>
@@ -432,6 +447,17 @@ namespace Repository.Mongo
         public T First(FilterDefinition<T> filter)
         {
             return Find(filter).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// get first item in query as async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public async Task<T> FirstAsync(FilterDefinition<T> filter)
+        {
+            return await Collection.Find(filter).FirstOrDefaultAsync();
+            //return await FindAsync(filter).GetAwaiter().GetResult().FirstOrDefaultAsync();
         }
 
         /// <summary>
