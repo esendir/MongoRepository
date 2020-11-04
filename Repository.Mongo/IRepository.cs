@@ -185,11 +185,25 @@ namespace Repository.Mongo
         T First();
 
         /// <summary>
+        /// get first item in query as async with filterdefinition
+        /// </summary>
+        /// <param name="filter">filter definition</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> FirstAsync(FilterDefinition<T> filter);
+
+        /// <summary>
         /// get first item in query
         /// </summary>
         /// <param name="filter">filter definition</param>
         /// <returns>entity of <typeparamref name="T"/></returns>
         T First(FilterDefinition<T> filter);
+
+        /// <summary>
+        /// get first item in query as async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        Task<T> FirstAsync(Expression<Func<T, bool>> filter);
 
         /// <summary>
         /// get first item in query
@@ -322,13 +336,40 @@ namespace Repository.Mongo
         #region FindOneAndUpdate
 
         /// <summary>
-        /// Find by filter definition and update with update definition
+        /// find by filter definition and update with update definition
         /// </summary>
         /// <param name="filter">filter definition</param>
         /// <param name="update">update definition</param>
         /// <param name="options">optional options like isUpsert</param>
         /// <returns>returns T</returns>
         T FindOneAndUpdate(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
+
+        /// <summary>
+        /// find by filter definition and update with update definition async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        Task<T> FindOneAndUpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
+
+        /// <summary>
+        /// find by express func and update with update definition
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        T FindOneAndUpdate(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
+
+        /// <summary>
+        /// find by express func and update with update definition async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        Task<T> FindOneAndUpdateAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
 
         #endregion FindOneAndUpdate
 

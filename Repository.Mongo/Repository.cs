@@ -425,6 +425,16 @@ namespace Repository.Mongo
         }
 
         /// <summary>
+        /// get first item in query as async with filterdefinition
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public async Task<T> FirstAsync(FilterDefinition<T> filter)
+        {
+            return await Collection.Find(filter).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// get first item in query
         /// </summary>
         /// <param name="filter">expression filter</param>
@@ -432,6 +442,16 @@ namespace Repository.Mongo
         public T First(FilterDefinition<T> filter)
         {
             return Find(filter).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// get first item in query as async with expression
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public async Task<T> FirstAsync(Expression<Func<T, bool>> filter)
+        {
+            return await Collection.Find(filter).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -650,6 +670,42 @@ namespace Repository.Mongo
         public T FindOneAndUpdate(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
         {
             return Collection.FindOneAndUpdate(filter, update, options);
+        }
+
+        /// <summary>
+        /// find one and update async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public async Task<T> FindOneAndUpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
+        {
+            return await Collection.FindOneAndUpdateAsync(filter, update, options);
+        }
+
+        /// <summary>
+        /// find one and update
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns>return updated entity</returns>
+        public T FindOneAndUpdate(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
+        {
+            return Collection.FindOneAndUpdate(filter, update, options);
+        }
+
+        /// <summary>
+        /// find one and update async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public async Task<T> FindOneAndUpdateAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
+        {
+            return await Collection.FindOneAndUpdateAsync(filter, update, options);
         }
 
         #endregion FindOneAndUpdate
