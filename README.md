@@ -38,7 +38,7 @@ public class UserRepository : Repository<User>
     {
         repo.Update (item, i => i.Password, newPassword);
     }
-    
+
     // Custom async method
     public async Task<User> FindbyUsernameAsync (string username) 
     {
@@ -52,6 +52,7 @@ public class UserRepository : Repository<User>
 public class UserRepository : Repository<Entity<User>> 
 {
     public UserRepository (string connectionString) : base (connectionString) { }
+
 
     // Custom method
     public User FindbyUsername (string username) 
