@@ -196,7 +196,7 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        Task<T> FirstAsync(FilterDefinition<T> filter);
+        Task<T> FirstAsync(Expression<Func<T, bool>> filter);
 
         /// <summary>
         /// get first item in query
@@ -329,13 +329,22 @@ namespace Repository.Mongo
         #region FindOneAndUpdate
 
         /// <summary>
-        /// Find by filter definition and update with update definition
+        /// find by filter definition and update with update definition
         /// </summary>
         /// <param name="filter">filter definition</param>
         /// <param name="update">update definition</param>
         /// <param name="options">optional options like isUpsert</param>
         /// <returns>returns T</returns>
         T FindOneAndUpdate(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
+
+        /// <summary>
+        /// find by filter definition and update with update definition async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        Task<T> FindOneAndUpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
 
         #endregion FindOneAndUpdate
 

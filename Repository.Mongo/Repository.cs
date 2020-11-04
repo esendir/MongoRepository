@@ -172,11 +172,6 @@ namespace Repository.Mongo
             return Collection.Find(filter);
         }
 
-        private async Task<IAsyncCursor<T>> QueryAsync(FilterDefinition<T> filter)
-        {
-            return await Collection.FindAsync(filter);
-        }
-
         private IFindFluent<T, T> Query(Expression<Func<T, bool>> filter)
         {
             return Collection.Find(filter);
@@ -303,16 +298,6 @@ namespace Repository.Mongo
         public virtual IEnumerable<T> Find(FilterDefinition<T> filter)
         {
             return Query(filter).ToEnumerable();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public virtual async Task<IAsyncCursor<T>> FindAsync(FilterDefinition<T> filter)
-        {
-            return await QueryAsync(filter);
         }
 
         /// <summary>
@@ -454,10 +439,9 @@ namespace Repository.Mongo
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public async Task<T> FirstAsync(FilterDefinition<T> filter)
+        public async Task<T> FirstAsync(Expression<Func<T, bool>> filter)
         {
             return await Collection.Find(filter).FirstOrDefaultAsync();
-            //return await FindAsync(filter).GetAwaiter().GetResult().FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -676,6 +660,18 @@ namespace Repository.Mongo
         public T FindOneAndUpdate(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
         {
             return Collection.FindOneAndUpdate(filter, update, options);
+        }
+
+        /// <summary>
+        /// find one and update async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public async Task<T> FindOneAndUpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
+        {
+            return await Collection.FindOneAndUpdateAsync(filter, update, options);
         }
 
         #endregion FindOneAndUpdate
