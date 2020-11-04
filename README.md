@@ -1,17 +1,18 @@
-
-[![Build Status](https://dev.azure.com/doxalabs/Public%20DevOps%20Pipelines/_apis/build/status/fatihyildizhan.MongoRepository?branchName=master)](https://dev.azure.com/doxalabs/Public%20DevOps%20Pipelines/_build/latest?definitionId=20&branchName=master)
 [![Version](https://img.shields.io/nuget/v/Repository.Mongo.svg?style=flat-square)](https://www.nuget.org/packages/Repository.Mongo)
 [![Downloads](https://img.shields.io/nuget/dt/Repository.Mongo.svg?style=flat-square)](https://www.nuget.org/packages/Repository.Mongo)
 
 ## MongoRepository
 Repository pattern for MongoDB with extended features
 
+### MongoDB Driver Version
+2.11.4
+
 ### Definition
 
 #### Model
 You don't need to create a model, but if you are doing so you need to extend Entity
 ```csharp
-//if you are able to define your model
+// If you are able to define your model
 public class User : Entity 
 {
     public string Username { get; set; }
@@ -26,16 +27,22 @@ public class UserRepository : Repository<User>
 {
     public UserRepository (string connectionString) : base (connectionString) { }
 
-    //custom method
+    // Custom method
     public User FindbyUsername (string username) 
     {
         return First (i => i.Username == username);
     }
 
-    //custom method2
+    // Custom method2
     public void UpdatePassword (User item, string newPassword) 
     {
         repo.Update (item, i => i.Password, newPassword);
+    }
+    
+    // Custom async method
+    public async Task<User> FindbyUsernameAsync (string username) 
+    {
+        return await FirstAsync (i => i.Username == username);
     }
 }
 ```
@@ -46,7 +53,7 @@ public class UserRepository : Repository<Entity<User>>
 {
     public UserRepository (string connectionString) : base (connectionString) { }
 
-    //custom method
+    // Custom method
     public User FindbyUsername (string username) 
     {
         return First (i => i.Content.Username == username);
