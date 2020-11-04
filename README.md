@@ -114,3 +114,63 @@ var count = repo.Count (p => p.Age > 20);
 // Get number of all documents
 var count = repo.EstimatedCount ();
 ```
+
+### List of Functions
+```csharp
+Delete(T entity)
+Task<bool> DeleteAsync(T entity)
+
+Delete(Expression<Func<T, bool>> filter)
+Task<bool> DeleteAsync(Expression<Func<T, bool>> filter)
+
+IEnumerable<T> Find(Expression<Func<T, bool>> filter, int pageIndex, int size)
+IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size)
+
+IEnumerable<T> FindAll(int pageIndex, int size)
+IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size)
+
+T First()
+T First(FilterDefinition<T> filter)
+T First(Expression<Func<T, bool>> filter)
+T First(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order)
+T First(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending)
+
+Task<T> FirstAsync(FilterDefinition<T> filter)
+Task<T> FirstAsync(Expression<Func<T, bool>> filter)
+
+T Last()
+T Last(FilterDefinition<T> filter)
+T Last(Expression<Func<T, bool>> filter)
+T Last(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order)
+T Last(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending)
+
+void Replace(IEnumerable<T> entities)
+
+T FindOneAndUpdate(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
+T FindOneAndUpdate(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
+
+Task<T> FindOneAndUpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
+Task<T> FindOneAndUpdateAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null)
+
+bool Update<TField>(T entity, Expression<Func<T, TField>> field, TField value)
+
+Task<bool> UpdateAsync<TField>(T entity, Expression<Func<T, TField>> field, TField value)
+
+bool Any(Expression<Func<T, bool>> filter)
+
+bool Update<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value)
+bool Update(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates)
+bool Update(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates)
+
+Task<bool> UpdateAsync(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates)
+Task<bool> UpdateAsync(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates)
+Task<bool> UpdateAsync<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value)
+
+long EstimatedCount()
+long Count(Expression<Func<T, bool>> filter)
+long EstimatedCount(EstimatedDocumentCountOptions options)
+
+Task<long> EstimatedCountAsync()
+Task<long> CountAsync(Expression<Func<T, bool>> filter)
+Task<long> EstimatedCountAsync(EstimatedDocumentCountOptions options)
+```

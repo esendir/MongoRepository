@@ -185,6 +185,13 @@ namespace Repository.Mongo
         T First();
 
         /// <summary>
+        /// get first item in query as async with filterdefinition
+        /// </summary>
+        /// <param name="filter">filter definition</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> FirstAsync(FilterDefinition<T> filter);
+
+        /// <summary>
         /// get first item in query
         /// </summary>
         /// <param name="filter">filter definition</param>
@@ -345,6 +352,24 @@ namespace Repository.Mongo
         /// <param name="options"></param>
         /// <returns></returns>
         Task<T> FindOneAndUpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
+
+        /// <summary>
+        /// find by express func and update with update definition
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        T FindOneAndUpdate(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
+
+        /// <summary>
+        /// find by express func and update with update definition async
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        Task<T> FindOneAndUpdateAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
 
         #endregion FindOneAndUpdate
 
