@@ -136,6 +136,50 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending);
 
+        /// <summary>
+        /// find entities
+        /// </summary>
+        /// <param name="filter">filter definition</param>
+        /// <returns>collection of entity</returns>
+        Task<IEnumerable<T>> FindAsync(FilterDefinition<T> filter);
+
+        /// <summary>
+        /// find entities
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>collection of entity</returns>
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// find entities with paging
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> filter, int pageIndex, int size);
+
+        /// <summary>
+        /// find entities with paging and ordering
+        /// default ordering is descending
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size);
+
+        /// <summary>
+        /// find entities with paging and ordering in direction
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>collection of entity</returns>
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending);
         #endregion Find
 
         #region FindAll
@@ -174,6 +218,39 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending);
 
+        /// <summary>
+        /// fetch all items in collection
+        /// </summary>
+        /// <returns>collection of entity</returns>
+        Task<IEnumerable<T>> FindAllAsync();
+
+        /// <summary>
+        /// fetch all items in collection with paging
+        /// </summary>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        Task<IEnumerable<T>> FindAllAsync(int pageIndex, int size);
+
+        /// <summary>
+        /// fetch all items in collection with paging and ordering
+        /// default ordering is descending
+        /// </summary>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, object>> order, int pageIndex, int size);
+
+        /// <summary>
+        /// fetch all items in collection with paging and ordering in direction
+        /// </summary>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>collection of entity</returns>
+        Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending);
         #endregion FindAll
 
         #region First
@@ -185,25 +262,11 @@ namespace Repository.Mongo
         T First();
 
         /// <summary>
-        /// get first item in query as async with filterdefinition
-        /// </summary>
-        /// <param name="filter">filter definition</param>
-        /// <returns>entity of <typeparamref name="T"/></returns>
-        Task<T> FirstAsync(FilterDefinition<T> filter);
-
-        /// <summary>
         /// get first item in query
         /// </summary>
         /// <param name="filter">filter definition</param>
         /// <returns>entity of <typeparamref name="T"/></returns>
         T First(FilterDefinition<T> filter);
-
-        /// <summary>
-        /// get first item in query as async
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        Task<T> FirstAsync(Expression<Func<T, bool>> filter);
 
         /// <summary>
         /// get first item in query
@@ -229,6 +292,42 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         T First(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending);
 
+        /// <summary>
+        /// get first item in collection
+        /// </summary>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> FirstAsync();
+
+        /// <summary>
+        /// get first item in query
+        /// </summary>
+        /// <param name="filter">filter definition</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> FirstAsync(FilterDefinition<T> filter);
+
+        /// <summary>
+        /// get first item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> FirstAsync(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// get first item in query with order
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> FirstAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order);
+
+        /// <summary>
+        /// get first item in query with order and direction
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> FirstAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending);
         #endregion First
 
         #region Get
@@ -240,6 +339,12 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         T Get(string id);
 
+        /// <summary>
+        /// get by id
+        /// </summary>
+        /// <param name="id">id value</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> GetAsync(string id);
         #endregion Get
 
         #region Insert
@@ -309,6 +414,42 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         T Last(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending);
 
+        /// <summary>
+        /// get last item in collection
+        /// </summary>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> LastAsync();
+
+        /// <summary>
+        /// get last item in query
+        /// </summary>
+        /// <param name="filter">filter definition</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> LastAsync(FilterDefinition<T> filter);
+
+        /// <summary>
+        /// get last item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> LastAsync(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// get last item in query with order
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> LastAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order);
+
+        /// <summary>
+        /// get last item in query with order and direction
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        Task<T> LastAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending);
         #endregion Last
 
         #region Replace
@@ -331,12 +472,18 @@ namespace Repository.Mongo
         /// <param name="entities">collection of entities</param>
         void Replace(IEnumerable<T> entities);
 
+        /// <summary>
+        /// replace collection of entities
+        /// </summary>
+        /// <param name="entities">collection of entities</param>
+        Task ReplaceAsync(IEnumerable<T> entities);
+
         #endregion Replace
 
         #region FindOneAndUpdate
 
         /// <summary>
-        /// find by filter definition and update with update definition
+        /// Find by filter definition and update with update definition
         /// </summary>
         /// <param name="filter">filter definition</param>
         /// <param name="update">update definition</param>
@@ -345,32 +492,31 @@ namespace Repository.Mongo
         T FindOneAndUpdate(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
 
         /// <summary>
-        /// find by filter definition and update with update definition async
+        /// Find by filter definition and update with update definition
         /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="update"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
+        /// <param name="filter">filter definition</param>
+        /// <param name="update">update definition</param>
+        /// <param name="options">optional options like isUpsert</param>
+        /// <returns>returns T</returns>
         Task<T> FindOneAndUpdateAsync(FilterDefinition<T> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
 
         /// <summary>
-        /// find by express func and update with update definition
+        /// find one and update
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="update"></param>
         /// <param name="options"></param>
-        /// <returns></returns>
+        /// <returns>return updated entity</returns>
         T FindOneAndUpdate(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
 
         /// <summary>
-        /// find by express func and update with update definition async
+        /// find one and update
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="update"></param>
         /// <param name="options"></param>
-        /// <returns></returns>
+        /// <returns>return updated entity</returns>
         Task<T> FindOneAndUpdateAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, FindOneAndUpdateOptions<T> options = null);
-
         #endregion FindOneAndUpdate
 
         #region Update
@@ -483,6 +629,13 @@ namespace Repository.Mongo
         /// <param name="filter">expression filter</param>
         /// <returns>true if exists, otherwise false</returns>
         bool Any(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// validate if filter result exists
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>true if exists, otherwise false</returns>
+        Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
 
         #region Count
         /// <summary>

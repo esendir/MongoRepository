@@ -30,12 +30,14 @@ namespace Repository.Mongo
         private readonly IConfiguration _config;
         private readonly IMongoClient _mongoClient;
         private readonly string _databaseName;
+        private RetryPolicy _retryPolicy;
+        private AsyncRetryPolicy _asyncRetryPolicy;
 
         /// <summary>
         /// if you already have mongo database and where collection name will be name of the repository
         /// </summary>
         /// <param name="mongoDatabase"></param>
-        public Repository(IMongoDatabase mongoDatabase): this(mongoDatabase, null)
+        public Repository(IMongoDatabase mongoDatabase) : this(mongoDatabase, null)
         {
         }
 
@@ -85,7 +87,7 @@ namespace Repository.Mongo
         /// where collection name will be name of the repository
         /// </summary>
         /// <param name="connectionString">connection string</param>
-        public Repository(string connectionString): this(connectionString, null)
+        public Repository(string connectionString) : this(connectionString, null)
         {
         }
 
@@ -102,17 +104,17 @@ namespace Repository.Mongo
 
         private IMongoCollection<T> GetCollection()
         {
-            if(_mongoDatabase != null)
+            if (_mongoDatabase != null)
             {
                 return Database<T>.GetCollection(_mongoDatabase, _collectionName);
             }
 
-            if(_mongoClient != null)
+            if (_mongoClient != null)
             {
                 return Database<T>.GetCollection(_mongoClient, _databaseName, _collectionName);
             }
 
-            if(_config != null)
+            if (_config != null)
             {
                 return Database<T>.GetCollection(_config);
             }
@@ -127,10 +129,7 @@ namespace Repository.Mongo
         {
             get
             {
-                if (_collection == null)
-                    _collection = GetCollection();
-                return _collection;
-
+                return _collection ??= GetCollection();
             }
         }
 
@@ -167,21 +166,46 @@ namespace Repository.Mongo
             }
         }
 
-        private IFindFluent<T, T> Query(FilterDefinition<T> filter)
+        /// <summary>
+        /// sort for collection
+        /// </summary>
+        public SortDefinitionBuilder<T> Sort
         {
-            return Collection.Find(filter);
+            get
+            {
+                return Builders<T>.Sort;
+            }
         }
 
-        private IFindFluent<T, T> Query(Expression<Func<T, bool>> filter)
+        private IAsyncCursor<T> Query(FilterDefinition<T> filter, FindOptions<T, T> options = null)
         {
-            return Collection.Find(filter);
+            return Retry(() => Collection.FindSync(filter, options));
         }
 
-        private IFindFluent<T, T> Query()
+        private IAsyncCursor<T> Query(Expression<Func<T, bool>> filter, FindOptions<T, T> options = null)
         {
-            return Collection.Find(Filter.Empty);
+            return Retry(() => Collection.FindSync(filter, options));
         }
 
+        private IAsyncCursor<T> Query(FindOptions<T, T> options = null)
+        {
+            return Query(Filter.Empty, options);
+        }
+
+        private Task<IAsyncCursor<T>> QueryAsync(FilterDefinition<T> filter, FindOptions<T, T> options = null)
+        {
+            return RetryAsync(() => Collection.FindAsync(filter, options));
+        }
+
+        private Task<IAsyncCursor<T>> QueryAsync(Expression<Func<T, bool>> filter, FindOptions<T, T> options = null)
+        {
+            return RetryAsync(() => Collection.FindAsync(filter, options));
+        }
+
+        private Task<IAsyncCursor<T>> QueryAsync(FindOptions<T, T> options = null)
+        {
+            return QueryAsync(Filter.Empty, options);
+        }
         #endregion MongoSpecific
 
         #region CRUD
@@ -203,10 +227,7 @@ namespace Repository.Mongo
         /// <param name="entity">entity</param>
         public Task<bool> DeleteAsync(T entity)
         {
-            return Task.Run(() =>
-            {
-                return Delete(entity);
-            });
+            return DeleteAsync(entity.Id);
         }
 
         /// <summary>
@@ -227,12 +248,10 @@ namespace Repository.Mongo
         /// <param name="id">id</param>
         public virtual Task<bool> DeleteAsync(string id)
         {
-            return Retry(() =>
+            return RetryAsync(async () =>
             {
-                return Task.Run(() =>
-                {
-                    return Delete(id);
-                });
+                var result = await Collection.DeleteOneAsync(i => i.Id == id);
+                return result.IsAcknowledged;
             });
         }
 
@@ -240,7 +259,7 @@ namespace Repository.Mongo
         /// delete items with filter
         /// </summary>
         /// <param name="filter">expression filter</param>
-        public bool Delete(Expression<Func<T, bool>> filter)
+        public virtual bool Delete(Expression<Func<T, bool>> filter)
         {
             return Retry(() =>
             {
@@ -252,14 +271,12 @@ namespace Repository.Mongo
         /// delete items with filter
         /// </summary>
         /// <param name="filter">expression filter</param>
-        public Task<bool> DeleteAsync(Expression<Func<T, bool>> filter)
+        public virtual Task<bool> DeleteAsync(Expression<Func<T, bool>> filter)
         {
-            return Retry(() =>
+            return RetryAsync(async () =>
             {
-                return Task.Run(() =>
-                {
-                    return Delete(filter);
-                });
+                var result = await Collection.DeleteManyAsync(filter);
+                return result.IsAcknowledged;
             });
         }
 
@@ -279,16 +296,14 @@ namespace Repository.Mongo
         /// </summary>
         public virtual Task<bool> DeleteAllAsync()
         {
-            return Retry(() =>
+            return RetryAsync(async () =>
             {
-                return Task.Run(() =>
-                {
-                    return DeleteAll();
-                });
+                var result = await Collection.DeleteManyAsync(Filter.Empty);
+                return result.IsAcknowledged;
             });
         }
         #endregion Delete
-        
+
         #region Find
         /// <summary>
         /// find entities
@@ -347,13 +362,80 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public virtual IEnumerable<T> Find(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
         {
-            return Retry(() =>
-            {
-                var query = Query(filter).Skip(pageIndex * size).Limit(size);
-                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
-            });
+            return Query(filter,
+                new FindOptions<T, T>
+                {
+                    Skip = pageIndex * size,
+                    Limit = size,
+                    Sort = isDescending ? Sort.Descending(order) : Sort.Ascending(order)
+                }).ToEnumerable();
         }
 
+        /// <summary>
+        /// find entities
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>collection of entity</returns>
+        public virtual async Task<IEnumerable<T>> FindAsync(FilterDefinition<T> filter)
+        {
+            return (await QueryAsync(filter)).ToEnumerable();
+        }
+
+        /// <summary>
+        /// find entities
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>collection of entity</returns>
+        public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> filter)
+        {
+            return (await QueryAsync(filter)).ToEnumerable();
+        }
+
+        /// <summary>
+        /// find entities with paging
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        public Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> filter, int pageIndex, int size)
+        {
+            return FindAsync(filter, i => i.Id, pageIndex, size);
+        }
+
+        /// <summary>
+        /// find entities with paging and ordering
+        /// default ordering is descending
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        public Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size)
+        {
+            return FindAsync(filter, order, pageIndex, size, true);
+        }
+
+        /// <summary>
+        /// find entities with paging and ordering in direction
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>collection of entity</returns>
+        public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
+        {
+            return (await QueryAsync(filter,
+                new FindOptions<T, T>
+                {
+                    Skip = pageIndex * size,
+                    Limit = size,
+                    Sort = isDescending ? Sort.Descending(order) : Sort.Ascending(order)
+                })).ToEnumerable();
+        }
         #endregion Find
 
         #region FindAll
@@ -364,10 +446,7 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public virtual IEnumerable<T> FindAll()
         {
-            return Retry(() =>
-            {
-                return Query().ToEnumerable();
-            });
+            return Query().ToEnumerable();
         }
 
         /// <summary>
@@ -404,13 +483,64 @@ namespace Repository.Mongo
         /// <returns>collection of entity</returns>
         public virtual IEnumerable<T> FindAll(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
         {
-            return Retry(() =>
+            return Query(new FindOptions<T, T>
             {
-                var query = Query().Skip(pageIndex * size).Limit(size);
-                return (isDescending ? query.SortByDescending(order) : query.SortBy(order)).ToEnumerable();
-            });
+                Skip = pageIndex * size,
+                Limit = size,
+                Sort = isDescending ? Sort.Descending(order) : Sort.Ascending(order)
+            }).ToEnumerable();
         }
 
+        /// <summary>
+        /// fetch all items in collection
+        /// </summary>
+        /// <returns>collection of entity</returns>
+        public virtual async Task<IEnumerable<T>> FindAllAsync()
+        {
+            return (await QueryAsync()).ToEnumerable();
+        }
+
+        /// <summary>
+        /// fetch all items in collection with paging
+        /// </summary>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        public Task<IEnumerable<T>> FindAllAsync(int pageIndex, int size)
+        {
+            return FindAllAsync(i => i.Id, pageIndex, size);
+        }
+
+        /// <summary>
+        /// fetch all items in collection with paging and ordering
+        /// default ordering is descending
+        /// </summary>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <returns>collection of entity</returns>
+        public Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, object>> order, int pageIndex, int size)
+        {
+            return FindAllAsync(order, pageIndex, size, true);
+        }
+
+        /// <summary>
+        /// fetch all items in collection with paging and ordering in direction
+        /// </summary>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="pageIndex">page index, based on 0</param>
+        /// <param name="size">number of items in page</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>collection of entity</returns>
+        public virtual async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, object>> order, int pageIndex, int size, bool isDescending)
+        {
+            return (await QueryAsync(new FindOptions<T, T>
+            {
+                Skip = pageIndex * size,
+                Limit = size,
+                Sort = isDescending ? Sort.Descending(order) : Sort.Ascending(order)
+            })).ToEnumerable();
+        }
         #endregion FindAll
 
         #region First
@@ -425,16 +555,6 @@ namespace Repository.Mongo
         }
 
         /// <summary>
-        /// get first item in query as async with filterdefinition
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public async Task<T> FirstAsync(FilterDefinition<T> filter)
-        {
-            return await Collection.Find(filter).FirstOrDefaultAsync();
-        }
-
-        /// <summary>
         /// get first item in query
         /// </summary>
         /// <param name="filter">expression filter</param>
@@ -442,16 +562,6 @@ namespace Repository.Mongo
         public T First(FilterDefinition<T> filter)
         {
             return Find(filter).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// get first item in query as async with expression
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public async Task<T> FirstAsync(Expression<Func<T, bool>> filter)
-        {
-            return await Collection.Find(filter).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -487,6 +597,57 @@ namespace Repository.Mongo
             return Find(filter, order, 0, 1, isDescending).FirstOrDefault();
         }
 
+        /// <summary>
+        /// get first item in collection
+        /// </summary>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public async Task<T> FirstAsync()
+        {
+            return (await FindAllAsync(i => i.Id, 0, 1, false)).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// get first item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public async Task<T> FirstAsync(FilterDefinition<T> filter)
+        {
+            return (await FindAsync(filter)).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// get first item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public Task<T> FirstAsync(Expression<Func<T, bool>> filter)
+        {
+            return FirstAsync(filter, i => i.Id);
+        }
+
+        /// <summary>
+        /// get first item in query with order
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public Task<T> FirstAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order)
+        {
+            return FirstAsync(filter, order, false);
+        }
+
+        /// <summary>
+        /// get first item in query with order and direction
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public async Task<T> FirstAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending)
+        {
+            return (await FindAsync(filter, order, 0, 1, isDescending)).FirstOrDefault();
+        }
         #endregion First
 
         #region Get
@@ -498,12 +659,18 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         public virtual T Get(string id)
         {
-            return Retry(() =>
-            {
-                return Find(i => i.Id == id).FirstOrDefault();
-            });
+            return First(i => i.Id == id);
         }
 
+        /// <summary>
+        /// get by id
+        /// </summary>
+        /// <param name="id">id value</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public virtual Task<T> GetAsync(string id)
+        {
+            return FirstAsync(i => i.Id == id);
+        }
         #endregion Get
 
         #region Insert
@@ -527,7 +694,7 @@ namespace Repository.Mongo
         /// <param name="entity">entity</param>
         public virtual Task InsertAsync(T entity)
         {
-            return Retry(() =>
+            return RetryAsync(() =>
             {
                 return Collection.InsertOneAsync(entity);
             });
@@ -552,7 +719,7 @@ namespace Repository.Mongo
         /// <param name="entities">collection of entities</param>
         public virtual Task InsertAsync(IEnumerable<T> entities)
         {
-            return Retry(() =>
+            return RetryAsync(() =>
             {
                 return Collection.InsertManyAsync(entities);
             });
@@ -577,7 +744,11 @@ namespace Repository.Mongo
         /// <returns>entity of <typeparamref name="T"/></returns>
         public T Last(FilterDefinition<T> filter)
         {
-            return Query(filter).SortByDescending(i => i.Id).FirstOrDefault();
+            return Query(filter,
+                new FindOptions<T, T>
+                {
+                    Sort = Sort.Descending(i => i.Id)
+                }).FirstOrDefault();
         }
 
         /// <summary>
@@ -613,6 +784,61 @@ namespace Repository.Mongo
             return First(filter, order, !isDescending);
         }
 
+        /// <summary>
+        /// get first item in collection
+        /// </summary>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public async Task<T> LastAsync()
+        {
+            return (await FindAllAsync(i => i.Id, 0, 1, true)).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// get last item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public async Task<T> LastAsync(FilterDefinition<T> filter)
+        {
+            return (await QueryAsync(filter,
+                new FindOptions<T, T>
+                {
+                    Sort = Sort.Descending(i => i.Id)
+                })).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// get last item in query
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public Task<T> LastAsync(Expression<Func<T, bool>> filter)
+        {
+            return LastAsync(filter, i => i.Id);
+        }
+
+        /// <summary>
+        /// get last item in query with order
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public Task<T> LastAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order)
+        {
+            return LastAsync(filter, order, false);
+        }
+
+        /// <summary>
+        /// get last item in query with order and direction
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <param name="order">ordering parameters</param>
+        /// <param name="isDescending">ordering direction</param>
+        /// <returns>entity of <typeparamref name="T"/></returns>
+        public Task<T> LastAsync(Expression<Func<T, bool>> filter, Expression<Func<T, object>> order, bool isDescending)
+        {
+            return FirstAsync(filter, order, !isDescending);
+        }
         #endregion Last
 
         #region Replace
@@ -635,12 +861,10 @@ namespace Repository.Mongo
         /// <param name="entity">entity</param>
         public virtual Task<bool> ReplaceAsync(T entity)
         {
-            return Retry(() =>
+            return RetryAsync(async () =>
             {
-                return Task.Run(() =>
-                {
-                    return Replace(entity);
-                });
+                var result = await Collection.ReplaceOneAsync(i => i.Id == entity.Id, entity);
+                return result.IsAcknowledged;
             });
         }
 
@@ -656,10 +880,21 @@ namespace Repository.Mongo
             }
         }
 
+        /// <summary>
+        /// replace collection of entities
+        /// </summary>
+        /// <param name="entities">collection of entities</param>
+        public async Task ReplaceAsync(IEnumerable<T> entities)
+        {
+            foreach (T entity in entities)
+            {
+                await ReplaceAsync(entity);
+            }
+        }
         #endregion Replace
 
         #region FindOneAndUpdate
-        
+
         /// <summary>
         /// find one and update
         /// </summary>
@@ -734,10 +969,7 @@ namespace Repository.Mongo
         /// <param name="value">new value</param>
         public Task<bool> UpdateAsync<TField>(T entity, Expression<Func<T, TField>> field, TField value)
         {
-            return Task.Run(() =>
-            {
-                return Update(entity, Updater.Set(field, value));
-            });
+            return UpdateAsync(entity, Updater.Set(field, value));
         }
 
         /// <summary>
@@ -758,10 +990,7 @@ namespace Repository.Mongo
         /// <param name="updates">updated field(s)</param>
         public virtual Task<bool> UpdateAsync(string id, params UpdateDefinition<T>[] updates)
         {
-            return Task.Run(() =>
-            {
-                return Update(Filter.Eq(i => i.Id, id), updates);
-            });
+            return UpdateAsync(Filter.Eq(i => i.Id, id), updates);
         }
 
         /// <summary>
@@ -782,10 +1011,7 @@ namespace Repository.Mongo
         /// <param name="updates">updated field(s)</param>
         public virtual Task<bool> UpdateAsync(T entity, params UpdateDefinition<T>[] updates)
         {
-            return Task.Run(() =>
-            {
-                return Update(entity.Id, updates);
-            });
+            return UpdateAsync(entity.Id, updates);
         }
 
         /// <summary>
@@ -810,10 +1036,7 @@ namespace Repository.Mongo
         /// <param name="value">new value</param>
         public Task<bool> UpdateAsync<TField>(FilterDefinition<T> filter, Expression<Func<T, TField>> field, TField value)
         {
-            return Task.Run(() =>
-            {
-                return Update(filter, Updater.Set(field, value));
-            });
+            return UpdateAsync(filter, Updater.Set(field, value));
         }
 
         /// <summary>
@@ -838,12 +1061,11 @@ namespace Repository.Mongo
         /// <param name="updates">updated field(s)</param>
         public Task<bool> UpdateAsync(FilterDefinition<T> filter, params UpdateDefinition<T>[] updates)
         {
-            return Retry(() =>
+            return RetryAsync(async () =>
             {
-                return Task.Run(() =>
-                {
-                    return Update(filter, updates);
-                });
+                var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
+                var result = await Collection.UpdateManyAsync(filter, update.CurrentDate(i => i.ModifiedOn));
+                return result.IsAcknowledged;
             });
         }
 
@@ -869,12 +1091,11 @@ namespace Repository.Mongo
         /// <param name="updates">updated field(s)</param>
         public Task<bool> UpdateAsync(Expression<Func<T, bool>> filter, params UpdateDefinition<T>[] updates)
         {
-            return Retry(() =>
+            return RetryAsync(async () =>
             {
-                return Task.Run(() =>
-                {
-                    return Update(filter, updates);
-                });
+                var update = Updater.Combine(updates).CurrentDate(i => i.ModifiedOn);
+                var result = await Collection.UpdateManyAsync(filter, update);
+                return result.IsAcknowledged;
             });
         }
 
@@ -891,10 +1112,17 @@ namespace Repository.Mongo
         /// <returns>true if exists, otherwise false</returns>
         public bool Any(Expression<Func<T, bool>> filter)
         {
-            return Retry(() =>
-            {
-                return First(filter) != null;
-            });
+            return First(filter) != null;
+        }
+
+        /// <summary>
+        /// validate if filter result exists
+        /// </summary>
+        /// <param name="filter">expression filter</param>
+        /// <returns>true if exists, otherwise false</returns>
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> filter)
+        {
+            return (await FirstAsync(filter)) != null;
         }
 
         #region Count
@@ -918,7 +1146,7 @@ namespace Repository.Mongo
         /// <returns>returns the count of documents that match the query for a collection or view.</returns>
         public Task<long> CountAsync(Expression<Func<T, bool>> filter)
         {
-            return Retry(() =>
+            return RetryAsync(() =>
             {
                 return Collection.CountDocumentsAsync(filter);
             });
@@ -946,7 +1174,7 @@ namespace Repository.Mongo
         /// <returns>returns the count of all documents in a collection or view with count options.</returns>        
         public Task<long> EstimatedCountAsync(EstimatedDocumentCountOptions options)
         {
-            return Retry(() =>
+            return RetryAsync(() =>
             {
                 return Collection.EstimatedDocumentCountAsync(options);
             });
@@ -970,7 +1198,7 @@ namespace Repository.Mongo
         /// <returns>returns the count of all documents in a collection or view.</returns>
         public Task<long> EstimatedCountAsync()
         {
-            return Retry(() =>
+            return RetryAsync(() =>
             {
                 return Collection.EstimatedDocumentCountAsync();
             });
@@ -995,11 +1223,53 @@ namespace Repository.Mongo
         /// </example>
         protected virtual TResult Retry<TResult>(Func<TResult> action)
         {
-            return RetryPolicy
-                .Handle<MongoConnectionException>(i => i.InnerException.GetType() == typeof(IOException) ||
-                                                       i.InnerException.GetType() == typeof(SocketException))
-                .Retry(3)
-                .Execute(action);
+            return (_retryPolicy ??= GetPolicyBuilder().Retry(3)).Execute(action);
+        }
+
+        /// <summary>
+        /// retry operation for three times if IOException occurs
+        /// </summary>
+        /// <typeparam name="TResult">return type</typeparam>
+        /// <param name="action">action</param>
+        /// <returns>action result</returns>
+        /// <example>
+        /// return Retry(() => 
+        /// { 
+        ///     do_something;
+        ///     return something;
+        /// });
+        /// </example>
+        protected virtual Task<TResult> RetryAsync<TResult>(Func<Task<TResult>> action)
+        {
+            return (_asyncRetryPolicy ??= GetPolicyBuilder().RetryAsync(3)).ExecuteAsync(action);
+        }
+
+        /// <summary>
+        /// retry operation for three times if IOException occurs
+        /// </summary>
+        /// <param name="action">action</param>
+        /// <returns>action result</returns>
+        /// <example>
+        /// return Retry(() => 
+        /// { 
+        ///     do_something;
+        ///     return something;
+        /// });
+        /// </example>
+        protected virtual Task RetryAsync(Func<Task> action)
+        {
+            return (_asyncRetryPolicy ??= GetPolicyBuilder().RetryAsync(3)).ExecuteAsync(action);
+        }
+
+        /// <summary>
+        /// Get retry policy
+        /// </summary>
+        /// <returns></returns>
+        protected PolicyBuilder GetPolicyBuilder()
+        {
+            return RetryPolicy.Handle<MongoConnectionException>(
+                i => i.InnerException.GetType() == typeof(IOException) ||
+                i.InnerException.GetType() == typeof(SocketException));
         }
         #endregion
     }
