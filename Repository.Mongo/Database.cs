@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Reflection;
-// Nuget Microsoft
-using Microsoft.Extensions.Configuration;
 // Nuget MongoDB
 using MongoDB.Driver;
 
@@ -12,16 +10,6 @@ namespace Repository.Mongo
     {
         private Database()
         {
-        }
-
-        /// <summary>
-        /// Creates and returns a MongoCollection from specified type
-        /// </summary>
-        /// <param name="config">Configuration interface</param>
-        /// <returns></returns>
-        internal static IMongoCollection<T> GetCollection(IConfiguration config)
-        {
-            return GetCollectionFromConnectionString(GetDefaultConnectionString(config), null);
         }
         
         /// <summary>
@@ -189,18 +177,5 @@ namespace Repository.Mongo
         }
 
         #endregion Connection Name
-
-        #region Connection String
-
-        /// <summary>
-        /// Retrieves the default connectionstring from the App.config or Web.config file.
-        /// </summary>
-        /// <returns>Returns the default connectionstring from the App.config or Web.config file.</returns>
-        internal static string GetDefaultConnectionString(IConfiguration config)
-        {
-            return ConfigurationExtensions.GetConnectionString(config, GetConnectionName());
-        }
-
-        #endregion Connection String
     }
 }

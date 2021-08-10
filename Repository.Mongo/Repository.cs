@@ -5,8 +5,6 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Collections.Generic;
-// Nuget Microsoft
-using Microsoft.Extensions.Configuration;
 // Nuget Polly
 using Polly;
 using Polly.Retry;
@@ -27,7 +25,6 @@ namespace Repository.Mongo
         private readonly IMongoDatabase _mongoDatabase;
         private readonly string _connectionString;
         private readonly string _collectionName;
-        private readonly IConfiguration _config;
         private readonly IMongoClient _mongoClient;
         private readonly string _databaseName;
         private RetryPolicy _retryPolicy;
@@ -74,14 +71,6 @@ namespace Repository.Mongo
             _collectionName = collectionName;
         }
 
-        /// <summary>
-        /// where you need to define a connectionString with the name of repository
-        /// </summary>
-        /// <param name="config">config interface to read default settings</param>
-        public Repository(IConfiguration config)
-        {
-            _config = config;
-        }
 
         /// <summary>
         /// where collection name will be name of the repository
@@ -112,11 +101,6 @@ namespace Repository.Mongo
             if (_mongoClient != null)
             {
                 return Database<T>.GetCollection(_mongoClient, _databaseName, _collectionName);
-            }
-
-            if (_config != null)
-            {
-                return Database<T>.GetCollection(_config);
             }
 
             return Database<T>.GetCollectionFromConnectionString(_connectionString, _collectionName);
