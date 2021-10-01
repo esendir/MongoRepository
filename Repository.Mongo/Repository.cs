@@ -107,6 +107,14 @@ namespace Repository.Mongo
         }
 
         /// <summary>
+        /// Defined collection name
+        /// </summary>
+        public string CollectionName
+        {
+            get { return _collectionName; }
+        }
+
+        /// <summary>
         /// mongo collection
         /// </summary>
         public IMongoCollection<T> Collection
@@ -1107,6 +1115,23 @@ namespace Repository.Mongo
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> filter)
         {
             return (await FirstAsync(filter)) != null;
+        }
+
+        /// <summary>
+        /// Drop collection from database
+        /// </summary>
+        public void DropCollection()
+        {
+            Collection.Database.DropCollection(_collectionName);
+        }
+
+        /// <summary>
+        /// Drop collection from database
+        /// </summary>
+        /// <returns></returns>
+        public Task DropCollectionAsync()
+        {
+            return Collection.Database.DropCollectionAsync(_collectionName);
         }
 
         #region Count
