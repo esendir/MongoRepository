@@ -35,6 +35,10 @@ namespace Repository.Mongo
         /// </summary>
         UpdateDefinitionBuilder<T> Updater { get; }
 
+        /// <summary>
+        /// Defined collection name
+        /// </summary>
+        string CollectionName { get; }
         #endregion MongoSpecific
 
         #region CRUD
@@ -636,6 +640,16 @@ namespace Repository.Mongo
         /// <param name="filter">expression filter</param>
         /// <returns>true if exists, otherwise false</returns>
         Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
+
+        /// <summary>
+        /// Drop collection from database
+        /// </summary>
+        void DropCollection();
+
+        /// <summary>
+        /// Drop collection from database
+        /// </summary>
+        Task DropCollectionAsync();
 
         #region Count
         /// <summary>

@@ -1128,7 +1128,6 @@ namespace Repository.Mongo
         /// <summary>
         /// Drop collection from database
         /// </summary>
-        /// <returns></returns>
         public Task DropCollectionAsync()
         {
             return Collection.Database.DropCollectionAsync(_collectionName);
