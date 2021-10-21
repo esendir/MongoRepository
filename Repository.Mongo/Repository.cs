@@ -843,7 +843,7 @@ namespace Repository.Mongo
         {
             return Retry(() =>
             {
-                return Collection.ReplaceOne(i => i.Id == entity.Id, entity).IsAcknowledged;
+                return Collection.ReplaceOne(i => i.Id == entity.Id, entity, new ReplaceOptions { IsUpsert = true }).IsAcknowledged;
             });
         }
 
@@ -855,7 +855,7 @@ namespace Repository.Mongo
         {
             return RetryAsync(async () =>
             {
-                var result = await Collection.ReplaceOneAsync(i => i.Id == entity.Id, entity);
+                var result = await Collection.ReplaceOneAsync(i => i.Id == entity.Id, entity, new ReplaceOptions { IsUpsert = true });
                 return result.IsAcknowledged;
             });
         }
