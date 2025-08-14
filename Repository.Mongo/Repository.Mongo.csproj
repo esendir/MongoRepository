@@ -4,7 +4,7 @@
     <Description>Repository pattern for MongoDB</Description>
     <AssemblyTitle>Repository.Mongo</AssemblyTitle>
     <Authors>Usame Esendir</Authors>
-    <TargetFrameworks>netstandard1.5;netstandard2.0;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Repository.Mongo</AssemblyName>
@@ -18,9 +18,9 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <Version>2.3.0</Version>
-    <AssemblyVersion>2.3.0</AssemblyVersion>
-    <FileVersion>2.3.0</FileVersion>
+    <Version>3.4.0</Version>
+    <AssemblyVersion>3.4.0</AssemblyVersion>
+    <FileVersion>3.4.0</FileVersion>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/esendir/mongorepository.git</RepositoryUrl>
@@ -29,16 +29,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.2" />
     <PackageReference Include="Polly" Version="7.2.2" />
   </ItemGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_5;netstandard2_0;NET452</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
-    <DocumentationFile>obj\Debug\netstandard1.5\Repository.Mongo.xml</DocumentationFile>
+    <DefineConstants>TRACE;DEBUG;netstandard2_0;NET472</DefineConstants>
   </PropertyGroup>
 
 </Project>
