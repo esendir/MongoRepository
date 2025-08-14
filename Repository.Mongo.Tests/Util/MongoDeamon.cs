@@ -13,7 +13,7 @@ namespace Repository.Mongo.Tests.Util
 
         public MongoDaemon()
         {
-            var assemblyFolder = Path.GetDirectoryName(new Uri(typeof(MongoDaemon).Assembly.CodeBase).LocalPath);
+            var assemblyFolder = Path.GetDirectoryName(new Uri(typeof(MongoDaemon).Assembly.Location).LocalPath);
             var mongoFolder = Path.Combine(assemblyFolder, "Database");
             var dbFolder = Path.Combine(mongoFolder, "temp");
 
